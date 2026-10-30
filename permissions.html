@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:,"><title>Airport Trip Planner: Permissions · Airport Trip Planner</title><style>
+:root{--ground:#f1f2ec;--surface:#fff;--surface-alt:#e4e7d9;--ink:#1d2116;--muted:#555c47;--border:#d3d8c3;--accent:#5a6b1f;--accent-ink:#48571a;--accent-soft:#eaf0d8;--accent-border:#cfdba8;--display:system-ui,-apple-system,sans-serif;--body:system-ui,sans-serif;--mono:ui-monospace,monospace;color-scheme:light}
+@media(prefers-color-scheme:dark){:root{--ground:#13150e;--surface:#1b1e14;--surface-alt:#252a1b;--ink:#eaeede;--muted:#a9b096;--border:#343a27;--accent:#b5c65a;--accent-ink:#cbd97f;--accent-soft:#2a3016;--accent-border:#4a5526;color-scheme:dark}}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--ink);background:var(--ground);font-family:var(--body);font-size:16px;line-height:1.65;-webkit-text-size-adjust:100%}a{color:var(--accent-ink)}a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:3px}
+.layout{max-width:1380px;margin:auto;display:grid;grid-template-columns:245px minmax(0,1fr);gap:32px;padding:32px 28px 85px}.main{min-width:0}.aside{position:sticky;top:22px;align-self:start;max-height:90vh;overflow:auto;border-left:3px solid var(--accent);padding:14px 15px}.aside summary{cursor:pointer;font-family:var(--display);font-size:14px;font-weight:800;padding-bottom:9px}.aside details+details{border-top:1px solid var(--border);margin-top:14px;padding-top:12px}.aside a{display:block;text-decoration:none;font-size:13px;line-height:1.4;color:var(--muted);padding:6px 0}.aside a[aria-current=page],.aside a:hover{color:var(--accent-ink);font-weight:800}.eyebrow{color:var(--accent-ink);text-transform:uppercase;font:800 12px var(--display);letter-spacing:.12em;margin:0 0 14px}.tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:24px}.tabs a{text-decoration:none;font:700 12.5px var(--display);padding:8px 11px;border-radius:7px;border:1px solid var(--border);background:var(--surface);color:var(--ink)}.tabs a[aria-current=page]{background:var(--accent-soft);border-color:var(--accent-border);color:var(--accent-ink)}.status{padding:15px 20px;border:1px solid var(--border);border-radius:10px;background:var(--surface-alt);margin:16px 0 30px}.status p{margin:4px 0;font-size:14px}.status strong{font:800 14px var(--display)}
+h1,h2,h3,h4{font-family:var(--display);line-height:1.25;letter-spacing:-.02em}h1{font-size:clamp(30px,3.4vw,43px);margin:28px 0 18px;max-width:27ch}h2{font-size:25px;border-top:2px solid var(--border);padding-top:25px;margin:48px 0 14px;scroll-margin-top:24px}h3{font-size:19px;margin:33px 0 13px;scroll-margin-top:24px}h4{font-size:16px;margin:25px 0 10px;scroll-margin-top:24px}p,li{line-height:1.75}p{max-width:85ch;margin:13px 0}li{margin:6px 0}ul,ol{padding-left:29px;max-width:100ch}strong{font-weight:800}hr{border:0;border-top:1px solid var(--border);margin:30px 0}blockquote{margin:23px 0;background:var(--surface-alt);border-left:4px solid var(--accent);padding:12px 20px;border-radius:0 8px 8px 0}
+code,pre{font-family:var(--mono)}code{font-size:.85em;overflow-wrap:anywhere;background:var(--surface-alt);border:1px solid var(--border);border-radius:4px;padding:2px 5px}pre{font-size:12px;line-height:1.65;background:var(--surface-alt);border:1px solid var(--border);padding:16px;border-radius:9px;overflow:auto;max-width:100%}pre code{padding:0;border:0;background:none;font-size:inherit}.table-wrap{overflow-x:auto;margin:20px 0;max-width:100%;border-radius:8px;border:1px solid var(--border)}table{width:100%;border-collapse:collapse;background:var(--surface);font-size:13.5px}th,td{padding:11px 13px;text-align:left;vertical-align:top;border-right:1px solid var(--border);border-bottom:1px solid var(--border);min-width:105px;max-width:470px;overflow-wrap:anywhere;line-height:1.55}th{background:var(--surface-alt);font-family:var(--display);font-weight:800;white-space:normal}tr:last-child td{border-bottom:0}th:last-child,td:last-child{border-right:0}table code{white-space:normal}
+.source{margin-top:32px;padding-top:16px;border-top:1px solid var(--border);font-size:14px;color:var(--muted)}.foot{margin-top:20px;color:var(--muted);font-size:13px;line-height:1.6}
+@media(max-width:900px){.layout{display:block;padding:22px 16px 50px}.aside{position:static;max-height:none;margin-bottom:28px}.aside a{display:inline-block;margin-right:13px}.aside details{margin-bottom:5px}h1{font-size:30px}h2{font-size:22px}th,td{padding:9px 11px;font-size:12px;min-width:95px}.flow{min-width:910px}}
+@media print{body{background:#fff;color:#1d2116}.layout{display:block;padding:0}.aside,.tabs,.status{display:none}.main{width:100%}a{color:inherit}h2,h3{break-after:avoid}.table-wrap{overflow:visible}table{font-size:10px}th,td{padding:5px;min-width:0}.flow-fig{break-inside:avoid}}
+</style></head>
+<body><div class="layout"><nav class="aside" aria-label="Document navigation"><details open class="toc"><summary>Documents</summary><a href="index.html">Home</a><a href="documents.html">Documents</a><a href="answer.html">Architecture</a><a href="overview.html">Overview</a><a href="brief.html">Requirements</a><a href="decisions.html">Decisions</a><a href="aws-deployment.html">AWS deployment</a><a href="worked-examples.html">Worked examples</a><a href="api.html">API</a><a href="upstream-contracts.html">Outside services</a><a href="concepts-and-ranking.html">Concepts and ranking</a><a href="ai-keyword-reading.html">AI keyword reading</a><a href="screens.html">Screens</a><a href="permissions.html" aria-current="page">Permissions</a><a href="test-plan.html">Test plan</a><a href="developer-setup.html">Developer setup</a><a href="questions-and-assumptions.html">Assumptions</a></details></nav><main class="main"><p class="eyebrow">Airport Trip Planner</p><nav class="tabs" aria-label="Shortcuts"><a href="index.html">Home</a><a href="documents.html">Documents</a><a href="answer.html">Architecture</a><a href="overview.html">Overview</a><a href="brief.html">Requirements</a><a href="decisions.html">Decisions</a></nav><h1 id="airport-trip-planner-permissions">Airport Trip Planner: Permissions</h1>
+<p>Exactly what each part of the system is allowed to do in AWS. Each role gets only what it needs. In the policies below, <code>${Account}</code> is the AWS account ID, and every regional resource is in <code>eu-west-2</code>. The CDK code generates these; this page is the reference to check them against.</p>
+<h2 id="who-has-which-role">Who has which role</h2>
+<div class="table-wrap"><table><thead><tr><th scope="col">Role</th><th scope="col">Used by</th><th scope="col">Can</th></tr></thead><tbody><tr><td><code>RecommendationsRole</code></td><td>Lambda <code>recommendations</code></td><td>Read the catalogue, read one secret, write logs (metrics travel in the logs)</td></tr><tr><td><code>RefreshRole</code></td><td>Lambda <code>refresh-catalogue</code></td><td>Read and write the catalogue, call Nova Micro, read two secrets, handle its queue, write logs (metrics travel in the logs)</td></tr><tr><td><code>SchedulerRole</code></td><td>EventBridge Scheduler</td><td>Send jobs to the refresh queue and its own dead-letter queue</td></tr><tr><td><code>DeployRole</code></td><td>The CI runner</td><td>Deploy the CDK stacks, nothing else</td></tr><tr><td>Browser</td><td>The web app</td><td>Nothing in AWS directly. It only calls the API with a Cognito token.</td></tr></tbody></table></div>
+<h2 id="recommendationsrole"><code>RecommendationsRole</code></h2>
+<pre><code>{
+  &quot;Version&quot;: &quot;2012-10-17&quot;,
+  &quot;Statement&quot;: [
+    {
+      &quot;Sid&quot;: &quot;ReadCatalogue&quot;,
+      &quot;Effect&quot;: &quot;Allow&quot;,
+      &quot;Action&quot;: [&quot;dynamodb:GetItem&quot;, &quot;dynamodb:Query&quot;],
+      &quot;Resource&quot;: &quot;arn:aws:dynamodb:eu-west-2:${Account}:table/AirportCatalogue&quot;
+    },
+    {
+      &quot;Sid&quot;: &quot;ReadTravellerServiceSecret&quot;,
+      &quot;Effect&quot;: &quot;Allow&quot;,
+      &quot;Action&quot;: &quot;secretsmanager:GetSecretValue&quot;,
+      &quot;Resource&quot;: &quot;arn:aws:secretsmanager:eu-west-2:${Account}:secret:airport-planner/traveller-service-*&quot;
+    }
+  ]
+}</code></pre>
+<p>Plus the standard <code>AWSLambdaBasicExecutionRole</code> managed policy for its own log group. Custom metrics are written as CloudWatch Embedded Metric Format log lines, so no <code>cloudwatch:PutMetricData</code> permission is needed. The traveller-service secret is only needed for the <a href="aws-deployment.html#who-the-traveller-is">fallback</a>; with the preferred option, remove that statement. If the fallback is used, add <code>dynamodb:GetItem</code> on the link records only, using a <code>dynamodb:LeadingKeys</code> condition for <code>TRAVELLER#*</code>.</p>
+<h2 id="refreshrole"><code>RefreshRole</code></h2>
+<pre><code>{
+  &quot;Version&quot;: &quot;2012-10-17&quot;,
+  &quot;Statement&quot;: [
+    {
+      &quot;Sid&quot;: &quot;ReadWriteCatalogue&quot;,
+      &quot;Effect&quot;: &quot;Allow&quot;,
+      &quot;Action&quot;: [&quot;dynamodb:GetItem&quot;, &quot;dynamodb:Query&quot;, &quot;dynamodb:PutItem&quot;, &quot;dynamodb:UpdateItem&quot;, &quot;dynamodb:BatchWriteItem&quot;],
+      &quot;Resource&quot;: &quot;arn:aws:dynamodb:eu-west-2:${Account}:table/AirportCatalogue&quot;
+    },
+    {
+      &quot;Sid&quot;: &quot;CallNovaMicro&quot;,
+      &quot;Effect&quot;: &quot;Allow&quot;,
+      &quot;Action&quot;: &quot;bedrock:InvokeModel&quot;,
+      &quot;Resource&quot;: &quot;arn:aws:bedrock:eu-west-2::foundation-model/amazon.nova-micro-v1:0&quot;
+    },
+    {
+      &quot;Sid&quot;: &quot;ReadUpstreamSecrets&quot;,
+      &quot;Effect&quot;: &quot;Allow&quot;,
+      &quot;Action&quot;: &quot;secretsmanager:GetSecretValue&quot;,
+      &quot;Resource&quot;: [
+        &quot;arn:aws:secretsmanager:eu-west-2:${Account}:secret:airport-planner/venue-service-*&quot;,
+        &quot;arn:aws:secretsmanager:eu-west-2:${Account}:secret:airport-planner/offers-source-*&quot;
+      ]
+    },
+    {
+      &quot;Sid&quot;: &quot;ConsumeRefreshQueue&quot;,
+      &quot;Effect&quot;: &quot;Allow&quot;,
+      &quot;Action&quot;: [&quot;sqs:ReceiveMessage&quot;, &quot;sqs:DeleteMessage&quot;, &quot;sqs:GetQueueAttributes&quot;, &quot;sqs:ChangeMessageVisibility&quot;],
+      &quot;Resource&quot;: &quot;arn:aws:sqs:eu-west-2:${Account}:catalogue-refresh&quot;
+    }
+  ]
+}</code></pre>
+<p>Plus <code>AWSLambdaBasicExecutionRole</code>. The Converse API is authorised by <code>bedrock:InvokeModel</code>. <code>sqs:ChangeMessageVisibility</code> is what lets the worker shorten the retry wait (<a href="aws-deployment.html#retries-without-waiting-30-minutes">Retries</a>). The role can&#39;t delete the table or change its settings.</p>
+<h2 id="schedulerrole"><code>SchedulerRole</code></h2>
+<pre><code>{
+  &quot;Version&quot;: &quot;2012-10-17&quot;,
+  &quot;Statement&quot;: [
+    {
+      &quot;Sid&quot;: &quot;SendRefreshJobs&quot;,
+      &quot;Effect&quot;: &quot;Allow&quot;,
+      &quot;Action&quot;: &quot;sqs:SendMessage&quot;,
+      &quot;Resource&quot;: [
+        &quot;arn:aws:sqs:eu-west-2:${Account}:catalogue-refresh&quot;,
+        &quot;arn:aws:sqs:eu-west-2:${Account}:scheduler-dlq&quot;
+      ]
+    }
+  ]
+}</code></pre>
+<p>Its trust policy allows only <code>scheduler.amazonaws.com</code>, limited to this account with an <code>aws:SourceAccount</code> condition.</p>
+<h2 id="deployrole"><code>DeployRole</code></h2>
+<p>The CI runner assumes this role through GitHub OIDC (or the CI system&#39;s equivalent). No long-lived AWS keys are stored in CI. It can only assume the CDK bootstrap roles (<code>cdk-*-deploy-role</code>, <code>cdk-*-file-publishing-role</code>) in this account, and only from the main branch for production.</p>
+<h2 id="other-rules">Other rules</h2>
+<ul><li><strong>Queues and secrets</strong> are encrypted with AWS-managed keys. The table uses DynamoDB&#39;s default encryption.</li>
+<li><strong>S3 bucket</strong>: all public access blocked; the bucket policy allows <code>s3:GetObject</code> only to the CloudFront distribution, through Origin Access Control.</li>
+<li><strong>API</strong>: no IAM access for travellers; every call goes through the Cognito authorizer.</li>
+<li><strong>Logs</strong> never contain tokens, credentials, preferences or flight details: log the traveller&#39;s token subject hashed, plus request IDs, counts and timings.</li>
+<li><strong>Humans</strong>: read-only access to logs and metrics for support; changes go through CI only. Production DynamoDB writes by a person need a break-glass role with an alert on use.</li></ul></main></div><script>if(matchMedia('(max-width:900px)').matches)document.querySelectorAll('.aside details').forEach(x=>x.open=false)</script></body></html>

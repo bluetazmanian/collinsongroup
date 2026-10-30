@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:,"><title>Airport Trip Planner: Screens · Airport Trip Planner</title><style>
+:root{--ground:#f1f2ec;--surface:#fff;--surface-alt:#e4e7d9;--ink:#1d2116;--muted:#555c47;--border:#d3d8c3;--accent:#5a6b1f;--accent-ink:#48571a;--accent-soft:#eaf0d8;--accent-border:#cfdba8;--display:system-ui,-apple-system,sans-serif;--body:system-ui,sans-serif;--mono:ui-monospace,monospace;color-scheme:light}
+@media(prefers-color-scheme:dark){:root{--ground:#13150e;--surface:#1b1e14;--surface-alt:#252a1b;--ink:#eaeede;--muted:#a9b096;--border:#343a27;--accent:#b5c65a;--accent-ink:#cbd97f;--accent-soft:#2a3016;--accent-border:#4a5526;color-scheme:dark}}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--ink);background:var(--ground);font-family:var(--body);font-size:16px;line-height:1.65;-webkit-text-size-adjust:100%}a{color:var(--accent-ink)}a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:3px}
+.layout{max-width:1380px;margin:auto;display:grid;grid-template-columns:245px minmax(0,1fr);gap:32px;padding:32px 28px 85px}.main{min-width:0}.aside{position:sticky;top:22px;align-self:start;max-height:90vh;overflow:auto;border-left:3px solid var(--accent);padding:14px 15px}.aside summary{cursor:pointer;font-family:var(--display);font-size:14px;font-weight:800;padding-bottom:9px}.aside details+details{border-top:1px solid var(--border);margin-top:14px;padding-top:12px}.aside a{display:block;text-decoration:none;font-size:13px;line-height:1.4;color:var(--muted);padding:6px 0}.aside a[aria-current=page],.aside a:hover{color:var(--accent-ink);font-weight:800}.eyebrow{color:var(--accent-ink);text-transform:uppercase;font:800 12px var(--display);letter-spacing:.12em;margin:0 0 14px}.tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:24px}.tabs a{text-decoration:none;font:700 12.5px var(--display);padding:8px 11px;border-radius:7px;border:1px solid var(--border);background:var(--surface);color:var(--ink)}.tabs a[aria-current=page]{background:var(--accent-soft);border-color:var(--accent-border);color:var(--accent-ink)}.status{padding:15px 20px;border:1px solid var(--border);border-radius:10px;background:var(--surface-alt);margin:16px 0 30px}.status p{margin:4px 0;font-size:14px}.status strong{font:800 14px var(--display)}
+h1,h2,h3,h4{font-family:var(--display);line-height:1.25;letter-spacing:-.02em}h1{font-size:clamp(30px,3.4vw,43px);margin:28px 0 18px;max-width:27ch}h2{font-size:25px;border-top:2px solid var(--border);padding-top:25px;margin:48px 0 14px;scroll-margin-top:24px}h3{font-size:19px;margin:33px 0 13px;scroll-margin-top:24px}h4{font-size:16px;margin:25px 0 10px;scroll-margin-top:24px}p,li{line-height:1.75}p{max-width:85ch;margin:13px 0}li{margin:6px 0}ul,ol{padding-left:29px;max-width:100ch}strong{font-weight:800}hr{border:0;border-top:1px solid var(--border);margin:30px 0}blockquote{margin:23px 0;background:var(--surface-alt);border-left:4px solid var(--accent);padding:12px 20px;border-radius:0 8px 8px 0}
+code,pre{font-family:var(--mono)}code{font-size:.85em;overflow-wrap:anywhere;background:var(--surface-alt);border:1px solid var(--border);border-radius:4px;padding:2px 5px}pre{font-size:12px;line-height:1.65;background:var(--surface-alt);border:1px solid var(--border);padding:16px;border-radius:9px;overflow:auto;max-width:100%}pre code{padding:0;border:0;background:none;font-size:inherit}.table-wrap{overflow-x:auto;margin:20px 0;max-width:100%;border-radius:8px;border:1px solid var(--border)}table{width:100%;border-collapse:collapse;background:var(--surface);font-size:13.5px}th,td{padding:11px 13px;text-align:left;vertical-align:top;border-right:1px solid var(--border);border-bottom:1px solid var(--border);min-width:105px;max-width:470px;overflow-wrap:anywhere;line-height:1.55}th{background:var(--surface-alt);font-family:var(--display);font-weight:800;white-space:normal}tr:last-child td{border-bottom:0}th:last-child,td:last-child{border-right:0}table code{white-space:normal}
+.source{margin-top:32px;padding-top:16px;border-top:1px solid var(--border);font-size:14px;color:var(--muted)}.foot{margin-top:20px;color:var(--muted);font-size:13px;line-height:1.6}
+@media(max-width:900px){.layout{display:block;padding:22px 16px 50px}.aside{position:static;max-height:none;margin-bottom:28px}.aside a{display:inline-block;margin-right:13px}.aside details{margin-bottom:5px}h1{font-size:30px}h2{font-size:22px}th,td{padding:9px 11px;font-size:12px;min-width:95px}.flow{min-width:910px}}
+@media print{body{background:#fff;color:#1d2116}.layout{display:block;padding:0}.aside,.tabs,.status{display:none}.main{width:100%}a{color:inherit}h2,h3{break-after:avoid}.table-wrap{overflow:visible}table{font-size:10px}th,td{padding:5px;min-width:0}.flow-fig{break-inside:avoid}}
+</style></head>
+<body><div class="layout"><nav class="aside" aria-label="Document navigation"><details open class="toc"><summary>Documents</summary><a href="index.html">Home</a><a href="documents.html">Documents</a><a href="answer.html">Architecture</a><a href="overview.html">Overview</a><a href="brief.html">Requirements</a><a href="decisions.html">Decisions</a><a href="aws-deployment.html">AWS deployment</a><a href="worked-examples.html">Worked examples</a><a href="api.html">API</a><a href="upstream-contracts.html">Outside services</a><a href="concepts-and-ranking.html">Concepts and ranking</a><a href="ai-keyword-reading.html">AI keyword reading</a><a href="screens.html" aria-current="page">Screens</a><a href="permissions.html">Permissions</a><a href="test-plan.html">Test plan</a><a href="developer-setup.html">Developer setup</a><a href="questions-and-assumptions.html">Assumptions</a></details></nav><main class="main"><p class="eyebrow">Airport Trip Planner</p><nav class="tabs" aria-label="Shortcuts"><a href="index.html">Home</a><a href="documents.html">Documents</a><a href="answer.html">Architecture</a><a href="overview.html">Overview</a><a href="brief.html">Requirements</a><a href="decisions.html">Decisions</a></nav><h1 id="airport-trip-planner-screens">Airport Trip Planner: Screens</h1>
+<p>What the traveller sees, screen by screen, and which <a href="api.html">API</a> answer leads to each. These describe content and behaviour, not visual design. A designer can style them freely as long as every state below exists.</p>
+<h2 id="ground-rules">Ground rules</h2>
+<ul><li><strong>Phone first.</strong> Most travellers use a phone at the airport. Lay everything out for a 390-pixel-wide screen first, then widen.</li>
+<li><strong>One job per screen.</strong> The traveller should see suggestions within one tap of opening the app.</li>
+<li><strong>Times in airport local time</strong>, using <code>airportTimeZone</code> from the API, with the time zone shown if it differs from the phone&#39;s.</li>
+<li><strong>Plain words.</strong> &quot;About 45 minutes before you need to head to your gate&quot;, not &quot;usable minutes: 45&quot;.</li>
+<li><strong>Accessible.</strong> Meets WCAG 2.2 AA: text contrast at least 4.5:1, every control reachable by keyboard and screen reader, nothing shown by colour alone, tap targets at least 44 by 44 pixels.</li>
+<li><strong>Brand text as plain text.</strong> Venue names, offer titles and keywords are always rendered as text, never as HTML.</li></ul>
+<h2 id="1-sign-in">1. Sign in</h2>
+<p>Shown when there&#39;s no valid token.</p>
+<ul><li>App name and one line: &quot;Find places to eat and shop before your flight.&quot;</li>
+<li>One button: <strong>Sign in</strong>, which starts the Cognito sign-in (authorization code with PKCE).</li>
+<li>After sign-in, go straight to screen 2.</li></ul>
+<p><strong>In the local version</strong> there&#39;s no Cognito sign-in page to send people to, so the app shows its own pages (a large headline on a dark band, a magenta button):</p>
+<ul><li><strong>Starting page:</strong> the headline, a short line, and a sign-in box (email and password) with <strong>Create an account</strong>.</li>
+<li><strong>Create your account:</strong> email, password and an optional mobile number. With a mobile number the code comes by text message, otherwise by email, as Cognito does when it checks both.</li>
+<li><strong>Check your email / Check your phone:</strong> where the code went, a box for it and <strong>Send a new code</strong>. Locally it links to where the code landed (Mailpit, or LocalStack&#39;s text messages).</li>
+<li><strong>My trip:</strong> what you like, any dietary needs, the airport, and the flight&#39;s date and time (airport local time), with optional flight number and gate. Shown after a first sign-in, and from <strong>My trip</strong> in the header. In AWS this comes from the traveller service; locally the person types it in.</li></ul>
+<p>Every page has a <strong>Light mode / Dark mode</strong> switch in the header. With no choice made, it follows the device setting.</p>
+<h2 id="2-loading">2. Loading</h2>
+<p>Shown while <code>POST /recommendations</code> runs.</p>
+<ul><li>&quot;Finding places for you…&quot; with a progress indicator.</li>
+<li>If it takes over 3 seconds, add &quot;Still working…&quot;. The API&#39;s own limit is 10 seconds.</li></ul>
+<h2 id="3-suggestions-status-ok">3. Suggestions (<code>status: ok</code>)</h2>
+<p><strong>Top bar</strong></p>
+<ul><li>Departure time: &quot;Departs 14:30&quot;.</li>
+<li>Time available: &quot;About <strong>45 minutes</strong> before you need to head to your gate.&quot;</li>
+<li>If <code>time.estimates</code> isn&#39;t empty, a small line under it: &quot;Boarding and walking times are estimates.&quot; with an info button that explains the 30- and 15-minute assumptions.</li></ul>
+<p><strong>Warnings</strong>, one line each, above the list:</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Warning</th><th scope="col">Text</th></tr></thead><tbody><tr><td><code>catalogue-stale</code></td><td>&quot;Shop details may be out of date. Offers are hidden for now.&quot;</td></tr><tr><td><code>offers-unavailable</code></td><td>&quot;Offers aren&#39;t available right now.&quot;</td></tr><tr><td><code>facts-missing</code></td><td>&quot;Some opening hours aren&#39;t known.&quot;</td></tr></tbody></table></div>
+<p><strong>Result cards</strong>, in the order the API gives, up to 10. Each card shows:</p>
+<ul><li>venue name and kind (restaurant, café, shop, bar);</li>
+<li>the reason: &quot;Matches: affordable, quick food&quot;;</li>
+<li>visit length: &quot;About 15 minutes&quot; (add &quot;estimate&quot; if <code>visitIsEstimate</code>);</li>
+<li>location, if known: &quot;Terminal 5 · near gate A10&quot;;</li>
+<li>offer, if any: title and &quot;until 15:00&quot;, visually set apart as an offer.</li></ul>
+<p><strong>Bottom:</strong> a <strong>Refresh</strong> button. Pull-to-refresh does the same.</p>
+<h2 id="4-head-to-your-gate-status-head-to-gate">4. Head to your gate (<code>status: head-to-gate</code>)</h2>
+<ul><li>Large message: &quot;You&#39;re close to boarding — head to your gate.&quot;</li>
+<li>Flight and departure time, and the gate if known.</li>
+<li>No list, and deliberately no &quot;show me anyway&quot; link: the point is not to make anyone late.</li></ul>
+<h2 id="5-nothing-suitable-status-no-suitable">5. Nothing suitable (<code>status: no-suitable</code>)</h2>
+<ul><li>&quot;No places match your preferences in the time you have.&quot;</li>
+<li>If the traveller has hard rules: &quot;We only show places that confirm your dietary needs.&quot;</li>
+<li>A link to edit preferences, if the traveller service offers one.</li></ul>
+<h2 id="6-no-reliable-data-status-no-reliable-data">6. No reliable data (<code>status: no-reliable-data</code>)</h2>
+<ul><li>&quot;We can&#39;t get up-to-date shop information right now. Please check the airport&#39;s own signs and app.&quot;</li>
+<li><strong>Try again</strong> button.</li></ul>
+<h2 id="7-errors">7. Errors</h2>
+<div class="table-wrap"><table><thead><tr><th scope="col">API answer</th><th scope="col">Screen</th></tr></thead><tbody><tr><td><code>401</code></td><td>Back to Sign in, keeping no data</td></tr><tr><td><code>404 unknown-airport</code></td><td>&quot;We don&#39;t cover this airport yet.&quot;</td></tr><tr><td><code>409 airport-mismatch</code></td><td>&quot;That isn&#39;t your flight&#39;s departure airport.&quot;</td></tr><tr><td><code>429</code> or <code>503</code></td><td>&quot;We couldn&#39;t load your trip details. Trying again…&quot;, retrying automatically after <code>Retry-After</code>, up to 3 times; then a <strong>Try again</strong> button</td></tr><tr><td><code>500</code>, network error</td><td>&quot;Something went wrong.&quot; with <strong>Try again</strong></td></tr></tbody></table></div>
+<h2 id="privacy-on-screen">Privacy on screen</h2>
+<ul><li>The app stores only the Cognito tokens (in memory, with the refresh token handled by the Cognito library) and the last answer for the current screen. Nothing is written to local storage.</li>
+<li>Signing out clears everything.</li></ul>
+<h2 id="what-s-not-on-these-screens">What&#39;s not on these screens</h2>
+<p>Booking, payment, maps and turn-by-turn directions are out of scope.</p></main></div><script>if(matchMedia('(max-width:900px)').matches)document.querySelectorAll('.aside details').forEach(x=>x.open=false)</script></body></html>

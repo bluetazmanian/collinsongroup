@@ -1,0 +1,17 @@
+{
+  "name": "@atp/infra",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "synth:local": "cdk synth -c target=local -q",
+    "deploy:local": "cdklocal deploy -c target=local --require-approval never"
+  },
+  "dependencies": {
+    "aws-cdk-lib": "2.275.0",
+    "constructs": "10.8.1"
+  },
+  "devDependencies": {
+    "aws-cdk": "2.1146.1",
+    "aws-cdk-local": "3.1.0"
+  }
+}

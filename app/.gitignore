@@ -1,0 +1,8 @@
+node_modules/
+cdk.out/
+infra/cdk.out/
+.env.local
+web/config.js
+*.log
+.local-outputs.json
+.local-data/

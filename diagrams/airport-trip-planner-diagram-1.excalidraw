@@ -1,0 +1,893 @@
+{
+  "type": "excalidraw",
+  "version": 2,
+  "source": "https://excalidraw.com",
+  "elements": [
+    {
+      "id": "title",
+      "type": "text",
+      "x": 60,
+      "y": 35,
+      "width": 1900,
+      "height": 52.5,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "a0",
+      "roundness": null,
+      "seed": 19257966,
+      "version": 2,
+      "versionNonce": 2078685346,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1793220893692,
+      "link": null,
+      "locked": false,
+      "text": "Airport Trip Planner | At a glance",
+      "fontSize": 42,
+      "fontFamily": 5,
+      "textAlign": "left",
+      "verticalAlign": "middle",
+      "containerId": null,
+      "originalText": "Airport Trip Planner | At a glance",
+      "autoResize": false,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "traveller",
+      "type": "rectangle",
+      "x": 60,
+      "y": 320,
+      "width": 340,
+      "height": 120,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "#e7f5ff",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1.5,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "a1",
+      "roundness": {
+        "type": 3
+      },
+      "seed": 862032277,
+      "version": 2,
+      "versionNonce": 1194367614,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "type": "text",
+          "id": "traveller-label"
+        },
+        {
+          "type": "arrow",
+          "id": "ask"
+        }
+      ],
+      "updated": 1793220893692,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "traveller-label",
+      "type": "text",
+      "x": 80,
+      "y": 346.25,
+      "width": 300,
+      "height": 67.5,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "a2",
+      "roundness": null,
+      "seed": 204006449,
+      "version": 2,
+      "versionNonce": 1973081186,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1793220893692,
+      "link": null,
+      "locked": false,
+      "text": "Traveller\nAsk for places",
+      "fontSize": 27,
+      "fontFamily": 5,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "traveller",
+      "originalText": "Traveller\nAsk for places",
+      "autoResize": false,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "planner",
+      "type": "rectangle",
+      "x": 690,
+      "y": 320,
+      "width": 460,
+      "height": 120,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "#ebfbee",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1.5,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "a3",
+      "roundness": {
+        "type": 3
+      },
+      "seed": 742110223,
+      "version": 2,
+      "versionNonce": 1702140606,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "type": "text",
+          "id": "planner-label"
+        },
+        {
+          "type": "arrow",
+          "id": "ask"
+        },
+        {
+          "type": "arrow",
+          "id": "reply"
+        },
+        {
+          "type": "arrow",
+          "id": "context"
+        },
+        {
+          "type": "arrow",
+          "id": "venues"
+        },
+        {
+          "type": "arrow",
+          "id": "facts"
+        }
+      ],
+      "updated": 1793220893692,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "planner-label",
+      "type": "text",
+      "x": 710,
+      "y": 346.25,
+      "width": 420,
+      "height": 67.5,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "a4",
+      "roundness": null,
+      "seed": 718121449,
+      "version": 2,
+      "versionNonce": 1304819746,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1793220893692,
+      "link": null,
+      "locked": false,
+      "text": "Trip planner\nMatch preferences and time",
+      "fontSize": 27,
+      "fontFamily": 5,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "planner",
+      "originalText": "Trip planner\nMatch preferences and time",
+      "autoResize": false,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "results",
+      "type": "rectangle",
+      "x": 1440,
+      "y": 320,
+      "width": 470,
+      "height": 120,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "#ebfbee",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1.5,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "a5",
+      "roundness": {
+        "type": 3
+      },
+      "seed": 192877543,
+      "version": 2,
+      "versionNonce": 1406046974,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "type": "text",
+          "id": "results-label"
+        },
+        {
+          "type": "arrow",
+          "id": "reply"
+        }
+      ],
+      "updated": 1793220893692,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "results-label",
+      "type": "text",
+      "x": 1460,
+      "y": 345,
+      "width": 430,
+      "height": 70,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "a6",
+      "roundness": null,
+      "seed": 258822733,
+      "version": 2,
+      "versionNonce": 72786914,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1793220893692,
+      "link": null,
+      "locked": false,
+      "text": "Suggestions\nPlaces + offers + reasons",
+      "fontSize": 28,
+      "fontFamily": 5,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "results",
+      "originalText": "Suggestions\nPlaces + offers + reasons",
+      "autoResize": false,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "preferences",
+      "type": "rectangle",
+      "x": 690,
+      "y": 100,
+      "width": 460,
+      "height": 110,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "#e7f5ff",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1.5,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "a7",
+      "roundness": {
+        "type": 3
+      },
+      "seed": 137388809,
+      "version": 2,
+      "versionNonce": 213877566,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "type": "text",
+          "id": "preferences-label"
+        },
+        {
+          "type": "arrow",
+          "id": "context"
+        }
+      ],
+      "updated": 1793220893692,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "preferences-label",
+      "type": "text",
+      "x": 710,
+      "y": 121.25,
+      "width": 420,
+      "height": 67.5,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "a8",
+      "roundness": null,
+      "seed": 520845391,
+      "version": 2,
+      "versionNonce": 1130092450,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1793220893692,
+      "link": null,
+      "locked": false,
+      "text": "Supplied service\nPreferences + flight time",
+      "fontSize": 27,
+      "fontFamily": 5,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "preferences",
+      "originalText": "Supplied service\nPreferences + flight time",
+      "autoResize": false,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "catalogue",
+      "type": "rectangle",
+      "x": 690,
+      "y": 610,
+      "width": 460,
+      "height": 120,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "#e9ecef",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1.5,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "a9",
+      "roundness": {
+        "type": 3
+      },
+      "seed": 526512513,
+      "version": 2,
+      "versionNonce": 313027454,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "type": "text",
+          "id": "catalogue-label"
+        },
+        {
+          "type": "arrow",
+          "id": "venues"
+        }
+      ],
+      "updated": 1793220893692,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "catalogue-label",
+      "type": "text",
+      "x": 710,
+      "y": 638.75,
+      "width": 420,
+      "height": 62.5,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "aA",
+      "roundness": null,
+      "seed": 215769526,
+      "version": 2,
+      "versionNonce": 453284706,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1793220893692,
+      "link": null,
+      "locked": false,
+      "text": "Airport catalogue\nVenues + keyword meanings",
+      "fontSize": 25,
+      "fontFamily": 5,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "catalogue",
+      "originalText": "Airport catalogue\nVenues + keyword meanings",
+      "autoResize": false,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "optional",
+      "type": "rectangle",
+      "x": 1440,
+      "y": 610,
+      "width": 470,
+      "height": 120,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "#fff3bf",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "dashed",
+      "roughness": 1.5,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "aB",
+      "roundness": {
+        "type": 3
+      },
+      "seed": 3288422,
+      "version": 2,
+      "versionNonce": 1942637502,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "type": "text",
+          "id": "optional-label"
+        },
+        {
+          "type": "arrow",
+          "id": "facts"
+        }
+      ],
+      "updated": 1793220893692,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "optional-label",
+      "type": "text",
+      "x": 1460,
+      "y": 637.5,
+      "width": 430,
+      "height": 65,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "aC",
+      "roundness": null,
+      "seed": 989768744,
+      "version": 2,
+      "versionNonce": 1033885474,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1793220893692,
+      "link": null,
+      "locked": false,
+      "text": "Optional facts\nOffers + boarding + walking time",
+      "fontSize": 26,
+      "fontFamily": 5,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "optional",
+      "originalText": "Optional facts\nOffers + boarding + walking time",
+      "autoResize": false,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "ask",
+      "type": "arrow",
+      "x": 410,
+      "y": 380,
+      "width": 270,
+      "height": 0,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "aD",
+      "roundness": {
+        "type": 2
+      },
+      "seed": 971451007,
+      "version": 2,
+      "versionNonce": 1313219582,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1793220893692,
+      "link": null,
+      "locked": false,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          270,
+          0
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": {
+        "elementId": "traveller",
+        "focus": 0,
+        "gap": 10,
+        "fixedPoint": [
+          1.0294117647058822,
+          0.5
+        ]
+      },
+      "endBinding": {
+        "elementId": "planner",
+        "focus": 0,
+        "gap": 10,
+        "fixedPoint": [
+          -0.021739130434782608,
+          0.5
+        ]
+      },
+      "startArrowhead": null,
+      "endArrowhead": "arrow",
+      "elbowed": false,
+      "fixedSegments": null,
+      "startIsSpecial": null,
+      "endIsSpecial": null
+    },
+    {
+      "id": "reply",
+      "type": "arrow",
+      "x": 1160,
+      "y": 380,
+      "width": 270,
+      "height": 0,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "aE",
+      "roundness": {
+        "type": 2
+      },
+      "seed": 866913332,
+      "version": 2,
+      "versionNonce": 1000121058,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1793220893692,
+      "link": null,
+      "locked": false,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          270,
+          0
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": {
+        "elementId": "planner",
+        "focus": 0,
+        "gap": 10,
+        "fixedPoint": [
+          1.0217391304347827,
+          0.5
+        ]
+      },
+      "endBinding": {
+        "elementId": "results",
+        "focus": 0,
+        "gap": 10,
+        "fixedPoint": [
+          -0.02127659574468085,
+          0.5
+        ]
+      },
+      "startArrowhead": null,
+      "endArrowhead": "arrow",
+      "elbowed": false,
+      "fixedSegments": null,
+      "startIsSpecial": null,
+      "endIsSpecial": null
+    },
+    {
+      "id": "context",
+      "type": "arrow",
+      "x": 920,
+      "y": 220,
+      "width": 0,
+      "height": 90,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "aF",
+      "roundness": {
+        "type": 2
+      },
+      "seed": 129958966,
+      "version": 2,
+      "versionNonce": 1411183678,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1793220893692,
+      "link": null,
+      "locked": false,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          90
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": {
+        "elementId": "preferences",
+        "focus": 0,
+        "gap": 10,
+        "fixedPoint": [
+          0.5,
+          1.0909090909090908
+        ]
+      },
+      "endBinding": {
+        "elementId": "planner",
+        "focus": 0,
+        "gap": 10,
+        "fixedPoint": [
+          0.5,
+          -0.08333333333333333
+        ]
+      },
+      "startArrowhead": null,
+      "endArrowhead": "arrow",
+      "elbowed": false,
+      "fixedSegments": null,
+      "startIsSpecial": null,
+      "endIsSpecial": null
+    },
+    {
+      "id": "venues",
+      "type": "arrow",
+      "x": 920,
+      "y": 600,
+      "width": 0,
+      "height": 150,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "aG",
+      "roundness": {
+        "type": 2
+      },
+      "seed": 6706290,
+      "version": 2,
+      "versionNonce": 1066006178,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1793220893692,
+      "link": null,
+      "locked": false,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          -150
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": {
+        "elementId": "catalogue",
+        "focus": 0,
+        "gap": 10,
+        "fixedPoint": [
+          0.5,
+          -0.08333333333333333
+        ]
+      },
+      "endBinding": {
+        "elementId": "planner",
+        "focus": 0,
+        "gap": 10,
+        "fixedPoint": [
+          0.5,
+          1.0833333333333333
+        ]
+      },
+      "startArrowhead": null,
+      "endArrowhead": "arrow",
+      "elbowed": false,
+      "fixedSegments": null,
+      "startIsSpecial": null,
+      "endIsSpecial": null
+    },
+    {
+      "id": "facts",
+      "type": "arrow",
+      "x": 1430,
+      "y": 670,
+      "width": 270,
+      "height": 250,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "dashed",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "aH",
+      "roundness": {
+        "type": 2
+      },
+      "seed": 871752762,
+      "version": 2,
+      "versionNonce": 1328528510,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1793220893692,
+      "link": null,
+      "locked": false,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          -130,
+          0
+        ],
+        [
+          -130,
+          -250
+        ],
+        [
+          -270,
+          -250
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": {
+        "elementId": "optional",
+        "focus": 0,
+        "gap": 10,
+        "fixedPoint": [
+          -0.02127659574468085,
+          0.5
+        ]
+      },
+      "endBinding": {
+        "elementId": "planner",
+        "focus": 0,
+        "gap": 10,
+        "fixedPoint": [
+          1.0217391304347827,
+          0.8333333333333334
+        ]
+      },
+      "startArrowhead": null,
+      "endArrowhead": "arrow",
+      "elbowed": false,
+      "fixedSegments": null,
+      "startIsSpecial": null,
+      "endIsSpecial": null
+    },
+    {
+      "id": "note",
+      "type": "text",
+      "x": 60,
+      "y": 815,
+      "width": 1850,
+      "height": 31.25,
+      "angle": 0,
+      "strokeColor": "#495057",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "aI",
+      "roundness": null,
+      "seed": 661236085,
+      "version": 2,
+      "versionNonce": 1243009634,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1793220893692,
+      "link": null,
+      "locked": false,
+      "text": "Unknown timing stays unverified. Missing offers are omitted. No suitable match is a valid result.",
+      "fontSize": 25,
+      "fontFamily": 5,
+      "textAlign": "left",
+      "verticalAlign": "middle",
+      "containerId": null,
+      "originalText": "Unknown timing stays unverified. Missing offers are omitted. No suitable match is a valid result.",
+      "autoResize": false,
+      "lineHeight": 1.25
+    }
+  ],
+  "appState": {
+    "gridSize": 20,
+    "gridStep": 5,
+    "gridModeEnabled": false,
+    "viewBackgroundColor": "#ffffff"
+  },
+  "files": {}
+}

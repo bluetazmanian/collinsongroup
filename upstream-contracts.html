@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:,"><title>Airport Trip Planner: Outside Services · Airport Trip Planner</title><style>
+:root{--ground:#f1f2ec;--surface:#fff;--surface-alt:#e4e7d9;--ink:#1d2116;--muted:#555c47;--border:#d3d8c3;--accent:#5a6b1f;--accent-ink:#48571a;--accent-soft:#eaf0d8;--accent-border:#cfdba8;--display:system-ui,-apple-system,sans-serif;--body:system-ui,sans-serif;--mono:ui-monospace,monospace;color-scheme:light}
+@media(prefers-color-scheme:dark){:root{--ground:#13150e;--surface:#1b1e14;--surface-alt:#252a1b;--ink:#eaeede;--muted:#a9b096;--border:#343a27;--accent:#b5c65a;--accent-ink:#cbd97f;--accent-soft:#2a3016;--accent-border:#4a5526;color-scheme:dark}}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--ink);background:var(--ground);font-family:var(--body);font-size:16px;line-height:1.65;-webkit-text-size-adjust:100%}a{color:var(--accent-ink)}a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:3px}
+.layout{max-width:1380px;margin:auto;display:grid;grid-template-columns:245px minmax(0,1fr);gap:32px;padding:32px 28px 85px}.main{min-width:0}.aside{position:sticky;top:22px;align-self:start;max-height:90vh;overflow:auto;border-left:3px solid var(--accent);padding:14px 15px}.aside summary{cursor:pointer;font-family:var(--display);font-size:14px;font-weight:800;padding-bottom:9px}.aside details+details{border-top:1px solid var(--border);margin-top:14px;padding-top:12px}.aside a{display:block;text-decoration:none;font-size:13px;line-height:1.4;color:var(--muted);padding:6px 0}.aside a[aria-current=page],.aside a:hover{color:var(--accent-ink);font-weight:800}.eyebrow{color:var(--accent-ink);text-transform:uppercase;font:800 12px var(--display);letter-spacing:.12em;margin:0 0 14px}.tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:24px}.tabs a{text-decoration:none;font:700 12.5px var(--display);padding:8px 11px;border-radius:7px;border:1px solid var(--border);background:var(--surface);color:var(--ink)}.tabs a[aria-current=page]{background:var(--accent-soft);border-color:var(--accent-border);color:var(--accent-ink)}.status{padding:15px 20px;border:1px solid var(--border);border-radius:10px;background:var(--surface-alt);margin:16px 0 30px}.status p{margin:4px 0;font-size:14px}.status strong{font:800 14px var(--display)}
+h1,h2,h3,h4{font-family:var(--display);line-height:1.25;letter-spacing:-.02em}h1{font-size:clamp(30px,3.4vw,43px);margin:28px 0 18px;max-width:27ch}h2{font-size:25px;border-top:2px solid var(--border);padding-top:25px;margin:48px 0 14px;scroll-margin-top:24px}h3{font-size:19px;margin:33px 0 13px;scroll-margin-top:24px}h4{font-size:16px;margin:25px 0 10px;scroll-margin-top:24px}p,li{line-height:1.75}p{max-width:85ch;margin:13px 0}li{margin:6px 0}ul,ol{padding-left:29px;max-width:100ch}strong{font-weight:800}hr{border:0;border-top:1px solid var(--border);margin:30px 0}blockquote{margin:23px 0;background:var(--surface-alt);border-left:4px solid var(--accent);padding:12px 20px;border-radius:0 8px 8px 0}
+code,pre{font-family:var(--mono)}code{font-size:.85em;overflow-wrap:anywhere;background:var(--surface-alt);border:1px solid var(--border);border-radius:4px;padding:2px 5px}pre{font-size:12px;line-height:1.65;background:var(--surface-alt);border:1px solid var(--border);padding:16px;border-radius:9px;overflow:auto;max-width:100%}pre code{padding:0;border:0;background:none;font-size:inherit}.table-wrap{overflow-x:auto;margin:20px 0;max-width:100%;border-radius:8px;border:1px solid var(--border)}table{width:100%;border-collapse:collapse;background:var(--surface);font-size:13.5px}th,td{padding:11px 13px;text-align:left;vertical-align:top;border-right:1px solid var(--border);border-bottom:1px solid var(--border);min-width:105px;max-width:470px;overflow-wrap:anywhere;line-height:1.55}th{background:var(--surface-alt);font-family:var(--display);font-weight:800;white-space:normal}tr:last-child td{border-bottom:0}th:last-child,td:last-child{border-right:0}table code{white-space:normal}
+.source{margin-top:32px;padding-top:16px;border-top:1px solid var(--border);font-size:14px;color:var(--muted)}.foot{margin-top:20px;color:var(--muted);font-size:13px;line-height:1.6}
+@media(max-width:900px){.layout{display:block;padding:22px 16px 50px}.aside{position:static;max-height:none;margin-bottom:28px}.aside a{display:inline-block;margin-right:13px}.aside details{margin-bottom:5px}h1{font-size:30px}h2{font-size:22px}th,td{padding:9px 11px;font-size:12px;min-width:95px}.flow{min-width:910px}}
+@media print{body{background:#fff;color:#1d2116}.layout{display:block;padding:0}.aside,.tabs,.status{display:none}.main{width:100%}a{color:inherit}h2,h3{break-after:avoid}.table-wrap{overflow:visible}table{font-size:10px}th,td{padding:5px;min-width:0}.flow-fig{break-inside:avoid}}
+</style></head>
+<body><div class="layout"><nav class="aside" aria-label="Document navigation"><details open class="toc"><summary>Documents</summary><a href="index.html">Home</a><a href="documents.html">Documents</a><a href="answer.html">Architecture</a><a href="overview.html">Overview</a><a href="brief.html">Requirements</a><a href="decisions.html">Decisions</a><a href="aws-deployment.html">AWS deployment</a><a href="worked-examples.html">Worked examples</a><a href="api.html">API</a><a href="upstream-contracts.html" aria-current="page">Outside services</a><a href="concepts-and-ranking.html">Concepts and ranking</a><a href="ai-keyword-reading.html">AI keyword reading</a><a href="screens.html">Screens</a><a href="permissions.html">Permissions</a><a href="test-plan.html">Test plan</a><a href="developer-setup.html">Developer setup</a><a href="questions-and-assumptions.html">Assumptions</a></details></nav><main class="main"><p class="eyebrow">Airport Trip Planner</p><nav class="tabs" aria-label="Shortcuts"><a href="index.html">Home</a><a href="documents.html">Documents</a><a href="answer.html">Architecture</a><a href="overview.html">Overview</a><a href="brief.html">Requirements</a><a href="decisions.html">Decisions</a></nav><h1 id="airport-trip-planner-outside-services">Airport Trip Planner: Outside Services</h1>
+<p>The planner depends on services it doesn&#39;t own. This page sets out exactly what it needs from each, in the shape it expects. <strong>These are proposals to agree with each service&#39;s owners</strong>: the requirements say the traveller and venue services exist, but not how they work. Where a real service differs, an adapter translates; the planner&#39;s rules don&#39;t change (<a href="diagrams/airport-trip-planner-diagram-2.excalidraw">application structure</a>).</p>
+<h2 id="traveller-service-supplied">Traveller service (supplied)</h2>
+<p>Used on every traveller request, through a 2-second deadline, a 60-second cache and a circuit breaker (<a href="aws-deployment.html#protecting-the-traveller-service">details</a>).</p>
+<p><strong>Preferred call</strong> — the service decides whose record to return from the traveller&#39;s own token:</p>
+<pre><code>GET https://&lt;traveller-service&gt;/travellers/me
+Authorization: Bearer &lt;the traveller&#39;s access token, forwarded&gt;</code></pre>
+<p><strong>Fallback call</strong> — only if the service can&#39;t accept that token. The planner uses its own credential and the verified link record (<a href="aws-deployment.html#who-the-traveller-is">Who the traveller is</a>):</p>
+<pre><code>GET https://&lt;traveller-service&gt;/travellers/{travellerId}
+Authorization: Bearer &lt;planner service credential from Secrets Manager&gt;</code></pre>
+<p><strong>Expected response:</strong></p>
+<pre><code>{
+  &quot;travellerId&quot;: &quot;t-48213&quot;,
+  &quot;preferences&quot;: {
+    &quot;likes&quot;: [&quot;budget-food&quot;, &quot;coffee&quot;, &quot;fashion&quot;],
+    &quot;hardRules&quot;: [&quot;vegan&quot;]
+  },
+  &quot;flight&quot;: {
+    &quot;flightNumber&quot;: &quot;BA123&quot;,
+    &quot;departureAirport&quot;: &quot;LHR&quot;,
+    &quot;scheduledDepartureAt&quot;: &quot;2026-10-30T14:30:00Z&quot;,
+    &quot;estimatedDepartureAt&quot;: &quot;2026-10-30T14:30:00Z&quot;,
+    &quot;gate&quot;: &quot;A10&quot;,
+    &quot;boardingClosesAt&quot;: null
+  },
+  &quot;updatedAt&quot;: &quot;2026-10-30T12:40:00Z&quot;
+}</code></pre>
+<div class="table-wrap"><table><thead><tr><th scope="col">What we need</th><th scope="col">Why</th><th scope="col">If it&#39;s missing</th></tr></thead><tbody><tr><td>Preference IDs from a fixed list</td><td>They map to <a href="concepts-and-ranking.html#preference-mapping">concepts</a> without AI</td><td>Free text can&#39;t be matched safely; the adapter would need a mapping table</td></tr><tr><td>Hard rules kept separate from likes</td><td>A hard rule removes venues; a like only ranks them</td><td>Everything is treated as a like</td></tr><tr><td>Departure airport as an IATA code</td><td>Picks the catalogue and checks the request</td><td><code>409</code> can&#39;t be detected</td></tr><tr><td>Estimated departure, not just scheduled</td><td>Delays change the usable time</td><td>Scheduled time is used, with a warning</td></tr><tr><td>Gate and boarding-close time</td><td>Replace the estimates</td><td>30-minute boarding and 15-minute walk estimates are used</td></tr><tr><td>UTC timestamps</td><td>Time maths</td><td>The adapter converts using the airport&#39;s time zone</td></tr></tbody></table></div>
+<p><strong>Errors the planner expects:</strong> <code>401</code> or <code>403</code> → the planner returns <code>401</code> to the browser; <code>404</code> (no record) → <code>503</code> with a &quot;no trip found&quot; message; <code>5xx</code> or no answer within 2 seconds → counts towards the circuit breaker and returns <code>503</code>.</p>
+<p><strong>Questions for the owners:</strong> Can you accept our Cognito tokens, or federate yours into our pool? Is the preference list fixed, and can we have it? Do you publish delay updates?</p>
+<h2 id="venue-service-supplied">Venue service (supplied)</h2>
+<p>Used only by the refresh job, never on a traveller request.</p>
+<pre><code>GET https://&lt;venue-service&gt;/airports/{airportId}/venues?pageToken=&lt;token&gt;
+Authorization: Bearer &lt;planner service credential from Secrets Manager&gt;</code></pre>
+<p><strong>Expected response:</strong></p>
+<pre><code>{
+  &quot;venues&quot;: [
+    {
+      &quot;venueId&quot;: &quot;v-0192&quot;,
+      &quot;name&quot;: &quot;Burger Stop&quot;,
+      &quot;kind&quot;: &quot;restaurant&quot;,
+      &quot;keywords&quot;: [&quot;fast food&quot;, &quot;cheap&quot;, &quot;takeaway&quot;],
+      &quot;terminal&quot;: &quot;5&quot;,
+      &quot;locationDescription&quot;: &quot;Near gate A10&quot;,
+      &quot;openingHours&quot;: [{ &quot;day&quot;: &quot;MON&quot;, &quot;opens&quot;: &quot;05:00&quot;, &quot;closes&quot;: &quot;22:00&quot; }],
+      &quot;serviceMinutes&quot;: null,
+      &quot;dietary&quot;: [],
+      &quot;updatedAt&quot;: &quot;2026-10-29T08:00:00Z&quot;
+    }
+  ],
+  &quot;nextPageToken&quot;: null
+}</code></pre>
+<p>Only <code>venueId</code>, <code>name</code> and <code>keywords</code> are essential. Everything else improves the answer when present: opening hours let the planner drop closed venues; <code>serviceMinutes</code> replaces the default visit length; location appears on the result card; <code>dietary</code> (for example <code>[&quot;vegan&quot;, &quot;halal&quot;]</code>), supplied by the venue, is the only thing that can satisfy a dietary hard rule. Opening hours are in airport local time; the planner converts them using the airport&#39;s time zone.</p>
+<p><strong>Questions for the owners:</strong> How big is a typical airport listing? How many requests per minute can we make? Do you have a &quot;changed since&quot; filter? Is <code>venueId</code> stable over time?</p>
+<h2 id="offers-feed-not-supplied-yet">Offers feed (not supplied yet)</h2>
+<p>Nothing in the requirements provides offers. When a source is found, the refresh job needs:</p>
+<pre><code>GET https://&lt;offers-source&gt;/airports/{airportId}/offers</code></pre>
+<pre><code>{
+  &quot;offers&quot;: [
+    {
+      &quot;offerId&quot;: &quot;o-77&quot;,
+      &quot;venueId&quot;: &quot;v-0192&quot;,
+      &quot;title&quot;: &quot;20% off meal deals&quot;,
+      &quot;conditions&quot;: &quot;Show boarding pass&quot;,
+      &quot;startsAt&quot;: &quot;2026-10-30T06:00:00Z&quot;,
+      &quot;endsAt&quot;: &quot;2026-10-30T15:00:00Z&quot;
+    }
+  ]
+}</code></pre>
+<p><code>venueId</code> must match the venue service&#39;s IDs. <code>startsAt</code> and <code>endsAt</code> are required; an offer without them is ignored. Until a source exists, no offers are shown.</p>
+<h2 id="travel-facts-not-supplied-yet">Travel facts (not supplied yet)</h2>
+<p>Gate-closing and walking times improve the time sum. If an airport can supply them, the planner reads:</p>
+<pre><code>{ &quot;airportId&quot;: &quot;LHR&quot;, &quot;walkMinutes&quot;: [{ &quot;fromVenueId&quot;: &quot;v-0192&quot;, &quot;toGate&quot;: &quot;A10&quot;, &quot;minutes&quot;: 6 }] }</code></pre>
+<p>Until then, the <a href="aws-deployment.html#time">labelled estimates</a> are used.</p>
+<h2 id="credentials">Credentials</h2>
+<p>Each service credential is stored in Secrets Manager as <code>airport-planner/&lt;service&gt;</code>, read at function start and cached for 5 minutes. No credential is ever sent to the browser or written to logs.</p></main></div><script>if(matchMedia('(max-width:900px)').matches)document.querySelectorAll('.aside details').forEach(x=>x.open=false)</script></body></html>

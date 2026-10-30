@@ -1,0 +1,6 @@
+{
+  "name": "@atp/api",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts"
+}

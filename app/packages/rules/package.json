@@ -1,0 +1,6 @@
+{
+  "name": "@atp/rules",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts"
+}

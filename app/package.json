@@ -1,0 +1,41 @@
+{
+  "name": "airport-trip-planner",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "stubs",
+    "infra"
+  ],
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run --maxWorkers=2",
+    "local:start": "node scripts/local-start.mjs",
+    "local:up": "docker compose -f docker-compose.local.yml -p atp up -d --build",
+    "local:down": "docker compose -f docker-compose.local.yml -p atp down",
+    "local:deploy": "node scripts/local-deploy.mjs",
+    "local:seed": "node scripts/local-seed.mjs",
+    "local:refresh": "node scripts/local-refresh.mjs",
+    "local:e2e": "node tests/e2e/run.mjs",
+    "docs": "node render.mjs",
+    "web": "node scripts/serve-web.mjs",
+    "local:logs": "node scripts/local-logs.mjs",
+    "local:browser": "node tests/e2e/browser.mjs"
+  },
+  "devDependencies": {
+    "@aws-sdk/client-cloudwatch-logs": "3.1160.0",
+    "@aws-sdk/client-cognito-identity-provider": "3.1160.0",
+    "@aws-sdk/client-dynamodb": "3.1160.0",
+    "@aws-sdk/client-sqs": "3.1160.0",
+    "@aws-sdk/lib-dynamodb": "3.1160.0",
+    "@types/aws-lambda": "8.10.164",
+    "@types/node": "22.20.5",
+    "esbuild": "0.28.2",
+    "playwright-core": "1.64.1",
+    "typescript": "5.9.3",
+    "vitest": "5.0.5"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

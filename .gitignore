@@ -1,0 +1,12 @@
+node_modules/
+cdk.out/
+.local-data/
+.local-outputs.json
+.env
+.env.*
+!.env.example
+*.log
+*.pem
+*.key
+.DS_Store
+/email-draft.md

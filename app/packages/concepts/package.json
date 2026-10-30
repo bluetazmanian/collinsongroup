@@ -1,0 +1,6 @@
+{
+  "name": "@atp/concepts",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts"
+}

@@ -1,0 +1,127 @@
+# This project's own local setup. Separate from anything else on the machine: own container
+# names (atp-*), own network (atp-net) and own ports.
+#   web app      http://localhost:5173      LocalStack  http://localhost:4568
+#   sign-in      http://localhost:9229      Mailpit     http://localhost:8026
+#   fake services http://localhost:4600     Dozzle      http://localhost:9998
+name: atp
+services:
+  localstack:
+    image: localstack/localstack:4.12
+    container_name: atp-localstack
+    ports:
+      - "127.0.0.1:4568:4566"
+    environment:
+      - MAIN_CONTAINER_NAME=atp-localstack
+      # Report this LocalStack's own host port in generated URLs, never 4566.
+      - LOCALSTACK_HOST=localhost.localstack.cloud:4568
+      - SERVICES=cloudformation,iam,sts,ssm,s3,ecr,lambda,apigateway,dynamodb,sqs,scheduler,events,secretsmanager,cloudwatch,logs,sns
+      - LAMBDA_DOCKER_NETWORK=atp-net
+      - AWS_DEFAULT_REGION=eu-west-2
+      - DEBUG=0
+    volumes:
+      - atp-localstack-data:/var/lib/localstack
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks: [atp-net]
+
+  stubs:
+    image: node:24-alpine
+    container_name: atp-stubs
+    user: "1000:1000"
+    working_dir: /app
+    command: ["node", "stubs/src/server.ts"]
+    environment:
+      - PORT=4600
+      - DATA_DIR=/app/.local-data
+      - WEB_ORIGIN=http://localhost:5173
+      - COGNITO_URL=http://atp-cognito:9229
+    ports:
+      - "127.0.0.1:4600:4600"
+    volumes:
+      - ./stubs:/app/stubs:ro
+      - ./packages/concepts:/app/packages/concepts:ro
+      - ./packages/adapters/src/jwt.ts:/app/packages/adapters/src/jwt.ts:ro
+      - ./.local-data:/app/.local-data
+    networks: [atp-net]
+
+  # The web app, with the same security headers CloudFront adds in AWS.
+  web:
+    image: node:24-alpine
+    container_name: atp-web
+    user: "1000:1000"
+    working_dir: /app
+    command: ["node", "scripts/serve-web.mjs"]
+    environment:
+      - HOST=0.0.0.0
+      - PORT=5173
+    ports:
+      - "127.0.0.1:5173:5173"
+    volumes:
+      - ./web:/app/web:ro
+      - ./scripts/serve-web.mjs:/app/scripts/serve-web.mjs:ro
+    networks: [atp-net]
+
+  # Stands in for EventBridge Scheduler, which the free LocalStack never fires: sends a catalogue
+  # refresh job every 15 minutes, so the catalogue never goes too old to use.
+  refresher:
+    image: node:24-alpine
+    container_name: atp-refresher
+    user: "1000:1000"
+    working_dir: /app
+    command: ["node", "scripts/local-refresher.mjs"]
+    environment:
+      - SQS_ENDPOINT=http://atp-localstack:4566
+      - AIRPORTS=LHR
+    volumes:
+      - ./scripts/local-refresher.mjs:/app/scripts/local-refresher.mjs:ro
+    depends_on: [localstack]
+    restart: unless-stopped
+    networks: [atp-net]
+
+  # Stands in for Cognito, which the free LocalStack doesn't have: sign-up, confirm, sign-in.
+  # Built from local/cognito so codes are delivered: email to Mailpit, text messages to
+  # LocalStack SNS.
+  cognito:
+    build: ./local/cognito
+    image: atp-cognito-local
+    container_name: atp-cognito
+    user: "1000:1000"
+    environment:
+      - MAILPIT_URL=http://atp-mailpit:8025
+      - SNS_ENDPOINT=http://atp-localstack:4566
+      - AWS_REGION=eu-west-2
+    ports:
+      - "127.0.0.1:9229:9229"
+    volumes:
+      - ./.local-data/cognito:/app/.cognito
+    networks: [atp-net]
+
+  # Catches every email sent locally. Inbox: http://localhost:8026 (own port, so it never
+  # meets another Mailpit on this machine). Codes arrive through its web API, so no SMTP port is opened.
+  mailpit:
+    image: axllent/mailpit:v1.31.0
+    container_name: atp-mailpit
+    ports:
+      - "127.0.0.1:8026:8025"
+    networks: [atp-net]
+
+  # Live logs for this project's containers only (atp-*): http://localhost:9998
+  # Own port and name filter, so it never shows another project's containers.
+  dozzle:
+    image: amir20/dozzle:v11.3.0
+    container_name: atp-dozzle
+    environment:
+      - DOZZLE_FILTER=name=atp-
+      - DOZZLE_NO_ANALYTICS=true
+    ports:
+      - "127.0.0.1:9998:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks: [atp-net]
+
+networks:
+  atp-net:
+    name: atp-net
+
+volumes:
+  # LocalStack's working files, kept in Docker rather than the project folder.
+  atp-localstack-data:

@@ -1,0 +1,36 @@
+{
+  "compilerOptions": {
+    "target": "ES2023",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "types": [
+      "node"
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@atp/concepts": [
+        "packages/concepts/src/index.ts"
+      ],
+      "@atp/rules": [
+        "packages/rules/src/index.ts"
+      ],
+      "@atp/adapters": [
+        "packages/adapters/src/index.ts"
+      ]
+    },
+    "allowImportingTsExtensions": true,
+    "noEmit": true
+  },
+  "include": [
+    "packages/*/src",
+    "packages/*/test",
+    "stubs/src",
+    "infra/bin",
+    "infra/lib"
+  ]
+}
