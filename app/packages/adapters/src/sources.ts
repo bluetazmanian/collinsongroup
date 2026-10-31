@@ -1,5 +1,5 @@
 // Venue service and offers feed clients, used only by the refresh job.
-import type { Offer, OpeningHours } from '@atp/rules';
+import { cleanOpeningHours, type Offer, type OpeningHours } from '@atp/rules';
 
 export interface SourceVenue {
   venueId: string;
@@ -42,15 +42,20 @@ async function getJson(o: ClientOptions, path: string): Promise<any> {
 const str = (x: unknown) => (typeof x === 'string' ? x : null);
 const strArr = (x: unknown) => (Array.isArray(x) ? x.filter((s): s is string => typeof s === 'string') : []);
 
-/** Fetch every page of an airport's venues. Venues without an ID, name or keywords are skipped. */
+/**
+ * Fetch every page of an airport's venues. Venues without an ID or name are skipped, and a venue
+ * listed again keeps its first entry: one publish batch can't hold the same key twice.
+ */
 export async function fetchVenues(o: ClientOptions, airportId: string, maxPages = 50): Promise<SourceVenue[]> {
   const out: SourceVenue[] = [];
+  const seen = new Set<string>();
   let token: string | null = null;
   for (let page = 0; page < maxPages; page++) {
     const q: string = token ? `?pageToken=${encodeURIComponent(token)}` : '';
     const body = await getJson(o, `/airports/${encodeURIComponent(airportId)}/venues${q}`);
     for (const v of Array.isArray(body?.venues) ? body.venues : []) {
-      if (!str(v?.venueId) || !str(v?.name)) continue;
+      if (!str(v?.venueId) || !str(v?.name) || seen.has(v.venueId)) continue;
+      seen.add(v.venueId);
       out.push({
         venueId: v.venueId,
         name: v.name,
@@ -58,9 +63,9 @@ export async function fetchVenues(o: ClientOptions, airportId: string, maxPages 
         keywords: strArr(v.keywords),
         terminal: str(v.terminal),
         locationDescription: str(v.locationDescription),
-        openingHours: Array.isArray(v.openingHours) ? v.openingHours : null,
+        openingHours: cleanOpeningHours(v.openingHours),
         serviceMinutes: typeof v.serviceMinutes === 'number' ? v.serviceMinutes : null,
-        dietary: strArr(v.dietary),
+        dietary: strArr(v.dietary).map((d) => d.trim().toLowerCase()),
       });
     }
     token = str(body?.nextPageToken);
@@ -69,11 +74,12 @@ export async function fetchVenues(o: ClientOptions, airportId: string, maxPages 
   throw new SourceUnavailable(`more than ${maxPages} pages for ${airportId}`);
 }
 
-/** Fetch live and future offers. Offers without start and end times are ignored. */
+/** Fetch live and future offers. Offers without readable start and end times, or ending before they start, are ignored. */
 export async function fetchOffers(o: ClientOptions, airportId: string): Promise<Offer[]> {
   const body = await getJson(o, `/airports/${encodeURIComponent(airportId)}/offers`);
   return (Array.isArray(body?.offers) ? body.offers : [])
-    .filter((x: any) => str(x?.offerId) && str(x?.venueId) && str(x?.title) && str(x?.startsAt) && str(x?.endsAt))
+    .filter((x: any) => str(x?.offerId) && str(x?.venueId) && str(x?.title) && str(x?.startsAt) && str(x?.endsAt)
+      && Date.parse(x.endsAt) > Date.parse(x.startsAt))
     .map((x: any) => ({
       offerId: x.offerId, venueId: x.venueId, title: x.title,
       conditions: str(x.conditions), startsAt: x.startsAt, endsAt: x.endsAt,

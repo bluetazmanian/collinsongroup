@@ -63,7 +63,7 @@ For one request, with the traveller's likes, hard rules and usable minutes:
 
 A venue is dropped if any of these is true:
 
-- it fails a hard rule (its supplied `dietary` list doesn't include the rule's concept);
+- it fails a hard rule (its supplied `dietary` list doesn't include the rule's concept, ignoring letter case). A hard rule the planner doesn't know, such as `kosher`, is never ignored: only a venue that states that same fact can meet it;
 - its opening hours are known and it's closed now, or closes before now + visit length;
 - its visit length is more than the usable minutes;
 - it matches none of the traveller's likes.
@@ -75,7 +75,7 @@ Visit length is the venue's `serviceMinutes` if supplied; otherwise 15 minutes i
 | Part | Points |
 | --- | --- |
 | Each like it matches | +10 |
-| A valid offer at this venue, and the catalogue is fresh | +5 |
+| A valid offer at this venue that lasts the whole visit, and the catalogue is fresh | +5 |
 | Visit uses more than 80% of the usable minutes | −5 |
 | Enrichment missing (matched on original keywords only) | −2 |
 

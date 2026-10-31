@@ -73,22 +73,25 @@ export function recommend(input: RecommendInput): Recommendation {
     const m = PREFERENCES[id];
     return m?.type === 'like' ? [m.rule] : [];
   });
-  const hardRules = traveller.hardRules.flatMap((id) => {
-    const m = PREFERENCES[id];
-    return m?.type === 'hard' ? [m.concept] : [];
+  // A hard rule the planner doesn't know is still a rule: only a venue that states the same fact can meet it.
+  const hardRules = traveller.hardRules.map((id) => {
+    const key = id.trim().toLowerCase();
+    const m = PREFERENCES[key];
+    return m?.type === 'hard' ? m.concept : key;
   });
 
-  const liveOffers = new Map<string, Offer>();
+  const liveOffers = new Map<string, Offer[]>();
   if (state === 'fresh') {
     for (const o of catalogue.offers) {
-      if (offerIsLive(o, now) && !liveOffers.has(o.venueId)) liveOffers.set(o.venueId, o);
+      if (offerIsLive(o, now)) liveOffers.set(o.venueId, [...(liveOffers.get(o.venueId) ?? []), o]);
     }
   }
 
   const candidates: Candidate[] = [];
   for (const venue of catalogue.venues) {
     // 1. Remove what can't work.
-    if (!hardRules.every((c) => venue.dietary.includes(c))) continue;
+    const dietary = venue.dietary.map((d) => d.trim().toLowerCase());
+    if (!hardRules.every((c) => dietary.includes(c))) continue;
     const concepts = venueConcepts(venue);
     const set = new Set(concepts);
     const visit = visitLength(venue, concepts);
@@ -100,7 +103,9 @@ export function recommend(input: RecommendInput): Recommendation {
 
     // 2. Score.
     let score = 10 * matchedRules.length;
-    const offer = liveOffers.get(venue.venueId);
+    // Only an offer that still runs when the visit ends counts.
+    const visitEnds = now.getTime() + visit.minutes * 60_000;
+    const offer = liveOffers.get(venue.venueId)?.find((o) => new Date(o.endsAt).getTime() >= visitEnds);
     if (offer) score += 5;
     if (visit.minutes > 0.8 * time.usableMinutes) score -= 5;
     if (venue.enrichment === 'missing') score -= 2;

@@ -162,10 +162,17 @@ await check("One account can't see another's trip", async () => {
   expect((await call(bob)).json?.status === 'head-to-gate', 'Bob did not get his own trip');
   expect((await trips(alice)).json.preferences.likes.join() === 'coffee,fashion', "Alice's trip changed");
 });
-await check('A bad trip is refused (no likes, unknown dietary need, departure in a week)', async () => {
-  for (const bad of [tripIn(90, { likes: [] }), tripIn(90, { hardRules: ['keto'] }), tripIn(7 * 24 * 60)]) {
+await check('A bad trip is refused (no likes, unknown dietary need, departure in 30 hours)', async () => {
+  for (const bad of [tripIn(90, { likes: [] }), tripIn(90, { hardRules: ['keto'] }), tripIn(30 * 60)]) {
     expect((await trips(alice, 'PUT', bad)).status === 400, `accepted ${JSON.stringify(bad)}`);
   }
+});
+await check('A flight that has already left gets a clear message, not suggestions', async () => {
+  // A new account: the API keeps each traveller's trip for 60 seconds, so Bob's earlier trip would still answer.
+  const late = await newAccount();
+  await trips(late, 'PUT', tripIn(-20, { likes: ['sit-down-dining'] }));
+  const r = await call(late);
+  expect(r.status === 409 && r.json?.error?.code === 'flight-departed', `got ${r.status} ${r.json?.error?.code ?? r.json?.status}`);
 });
 await check('A changed or made-up token is refused by the API and the traveller service', async () => {
   const [h, p, sig] = alice.split('.');

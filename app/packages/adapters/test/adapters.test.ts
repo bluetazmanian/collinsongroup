@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { AI_CONCEPTS } from '@atp/concepts';
 import {
-  SYSTEM_PROMPT, TravellerClient, TravellerUnavailable, retryDelaySeconds, validateReply,
+  SYSTEM_PROMPT, TravellerClient, TravellerUnavailable, fetchOffers, fetchVenues, retryDelaySeconds, validateReply,
 } from '../src/index.js';
 
 describe('AI reply checks', () => {
@@ -89,5 +89,39 @@ describe('traveller client', () => {
       fetchImpl: ((_u: string, init: RequestInit) => new Promise((_, rej) => init.signal!.addEventListener('abort', () => rej(new Error('aborted'))))) as unknown as typeof fetch,
     });
     await expect(c.get('s', { token: 'x' })).rejects.toBeInstanceOf(TravellerUnavailable);
+  });
+});
+
+describe('venue and offer feeds', () => {
+  const serve = (body: unknown) => ({
+    baseUrl: 'http://stub',
+    fetchImpl: (async () => new Response(JSON.stringify(body), { status: 200 })) as typeof fetch,
+  });
+
+  it('keeps the first entry of a venue listed twice', async () => {
+    const venues = await fetchVenues(serve({ venues: [
+      { venueId: 'v1', name: 'First', keywords: [] },
+      { venueId: 'v1', name: 'Again', keywords: [] },
+    ], nextPageToken: null }), 'LHR');
+    expect(venues.map((v) => v.name)).toEqual(['First']);
+  });
+
+  it('cleans opening hours and dietary facts', async () => {
+    const [v] = await fetchVenues(serve({ venues: [{
+      venueId: 'v1', name: 'Cafe', keywords: [], dietary: [' Vegan '],
+      openingHours: [{ day: 'friday', opens: '6:00', closes: '22:00' }, { day: 'SAT', opens: '6am' }, null],
+    }], nextPageToken: null }), 'LHR');
+    expect(v?.openingHours).toEqual([{ day: 'FRI', opens: '06:00', closes: '22:00' }]);
+    expect(v?.dietary).toEqual(['vegan']);
+  });
+
+  it('drops offers with unreadable or backwards dates', async () => {
+    const base = { venueId: 'v1', title: 'Deal' };
+    const offers = await fetchOffers(serve({ offers: [
+      { ...base, offerId: 'good', startsAt: '2026-10-30T10:00:00Z', endsAt: '2026-10-30T18:00:00Z' },
+      { ...base, offerId: 'words', startsAt: 'soon', endsAt: 'later' },
+      { ...base, offerId: 'backwards', startsAt: '2026-10-30T18:00:00Z', endsAt: '2026-10-30T10:00:00Z' },
+    ] }), 'LHR');
+    expect(offers.map((o) => o.offerId)).toEqual(['good']);
   });
 });

@@ -95,6 +95,9 @@ Every error uses one shape:
 | 403 | `forbidden` | Token lacks the scope | Shows a generic error |
 | 404 | `unknown-airport` | No catalogue exists for this airport | "We don't cover this airport yet" |
 | 409 | `airport-mismatch` | `airportId` isn't the flight's departure airport | Shows the message; the traveller is at the wrong airport for this flight |
+| 409 | `flight-departed` | The flight's departure time has passed | Shows the message and "Change my trip" |
+| 409 | `flight-not-today` | The flight leaves more than 24 hours from now | Shows the message and "Change my trip" |
+| 409 | `flight-time-unreadable` | The traveller service sent no readable departure time | Shows the message and "Change my trip" |
 | 429 | `too-many-requests` | Throttling or WAF rate rule | Waits for `Retry-After`, then retries |
 | 503 | `traveller-service-unavailable` | Deadline hit or circuit breaker open | Waits for `Retry-After` (10 seconds), retries up to 3 times with jitter |
 | 500 | `internal-error` | Anything unexpected | Shows a generic error with a retry button |
@@ -107,7 +110,7 @@ Every error uses one shape:
 ## How the function builds the answer
 
 1. Read the token subject; get preferences and flight ([Outside services](upstream-contracts.md)).
-2. Check `airportId` against the flight's departure airport.
+2. Check `airportId` against the flight's departure airport, then the flight itself: departed, more than 24 hours away or no readable departure time each give a `409`.
 3. Get the active catalogue version and its age ([AWS design](aws-deployment.md#reading-the-catalogue-without-a-hot-partition)). Over 4 hours: `no-reliable-data`.
 4. Work out usable minutes ([Time](aws-deployment.md#time)). Under 10: `head-to-gate`.
 5. Filter and rank ([Concepts and ranking](concepts-and-ranking.md)). Nothing left: `no-suitable`.

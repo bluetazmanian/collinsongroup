@@ -71,7 +71,8 @@ function readTrip(raw: string): SavedTrip | string {
   if (typeof b.airport !== 'string' || !/^[A-Z]{3}$/.test(b.airport)) return 'airport must be a three-letter code';
   const dep = typeof b.departureAt === 'string' ? new Date(b.departureAt) : null;
   if (!dep || Number.isNaN(dep.getTime())) return 'departure time missing';
-  if (dep.getTime() < Date.now() - 60 * MIN || dep.getTime() > Date.now() + 2 * 24 * 60 * MIN) return 'departure must be within the next two days';
+  // The planner gives suggestions for the next 24 hours only (aws-deployment.md, "Time").
+  if (dep.getTime() < Date.now() - 60 * MIN || dep.getTime() > Date.now() + 24 * 60 * MIN) return 'departure must be within the next 24 hours';
   const text = (v: unknown, re: RegExp) => (typeof v === 'string' && v.trim() ? (re.test(v.trim().toUpperCase()) ? v.trim().toUpperCase() : undefined) : null);
   const flightNumber = text(b.flightNumber, /^[A-Z0-9]{2,8}$/);
   const gate = text(b.gate, /^[A-Z0-9]{1,5}$/);

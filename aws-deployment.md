@@ -82,6 +82,8 @@ Usable time = flight departure − now − boarding buffer − walk buffer.
 
 A venue is suggested only if its visit length fits the usable time. If the usable time is under 10 minutes, the answer is "head to your gate" rather than a list. Every suggestion that relies on an estimate says so.
 
+A flight that has already left, or leaves more than **24 hours** from now, gets a clear message instead of suggestions; suggestions are for the day of travel. A departure time without a UTC offset is read in the airport's time zone.
+
 ## What happens every 15 minutes
 
 Scheduler puts an airport refresh job on SQS. Lambda polls the queue and invokes `refresh-catalogue`. The worker fetches that airport's listings and, if an offers feed is supplied, its offers. It compares the keywords with the previous version and sends Nova Micro **every venue whose keywords changed, plus every venue whose enrichment is still missing**, up to 200 per job. The first full load is spread over several runs; any venue not done yet is matched on its original keywords until then.
@@ -118,7 +120,7 @@ Write every venue and offer in a new immutable version before moving the active 
 The planner doesn't have a sales source yet; it needs an offers feed with, for each offer, the venue, start and end times, conditions and where it came from. When one is supplied:
 
 - the refresh worker stores offers inside the catalogue version, as above;
-- at response time, an offer is shown only if `startsAt ≤ now < endsAt`, so an offer that expires mid-visit-window or since the last refresh is dropped;
+- at response time, an offer is shown only if `startsAt ≤ now` and it still runs when the visit ends, so an offer that expires mid-visit or since the last refresh is dropped;
 - offers are shown only while the catalogue is **fresh** (see below); a stale catalogue shows venues but no offers.
 
 Without a feed, no offers are shown and nothing is invented.
@@ -132,6 +134,8 @@ The catalogue has three states, based on the time since the last successful refr
 | Under 30 minutes | **Fresh:** venues and valid offers as normal |
 | 30 minutes to 4 hours | **Stale:** venues still shown, with "details may be out of date"; offers left out; an alarm has already fired |
 | Over 4 hours | **Too old:** a clear "no reliable data" answer |
+
+A refresh time more than 5 minutes in the future means a clock is wrong, so the catalogue is treated as stale.
 
 A short outage of the venue service therefore doesn't blank the app.
 
@@ -182,8 +186,40 @@ The API role can read the catalogue and its required upstream secret. Only the r
 
 ## Why this choice, and what we give up
 
-The [architecture overview](answer.md) covers the main trade-offs.
+For each part: what was chosen, what else was considered, and what we give up. The reasons for each choice are in [The AWS choices](#the-aws-choices); [Decisions](decisions.md) records the main decisions.
+
+| Part | Choice | Considered instead | What we give up |
+| --- | --- | --- | --- |
+| Web app | Plain HTML, CSS and JavaScript | React or another component framework | We write the page rendering and state handling ourselves. Worth revisiting if the screens grow |
+| Web hosting | Private S3 bucket behind CloudFront | Amplify Hosting | More set-up than Amplify |
+| Sign-in | Cognito user pool, code flow with PKCE | The traveller service's own sign-in, or a third-party provider | A second account system unless it is federated with the traveller service's identity provider, which has to be agreed with its owner |
+| API | API Gateway REST API with WAF and throttling | HTTP API (about a third of the price per request) | Higher cost per request than an HTTP API |
+| Compute | Two Lambda functions, TypeScript on Node.js 24 | Containers on ECS Fargate | Cold starts and Lambda's time limits; no always-on process |
+| Ranking rules | A separate package with no AWS code | Logic inside the Lambda handler | A little more structure up front |
+| Catalogue store | DynamoDB, on demand | Aurora Serverless (PostgreSQL) | Ad-hoc queries and reporting; versioning is our own logic, not a database feature |
+| Refresh trigger | EventBridge Scheduler puts a job on SQS every 15 minutes | Step Functions | No visual workflow; retry rules live in our code |
+| Keyword reading | Amazon Nova Micro on Bedrock | Keyword list, embeddings, Comprehend, a larger model: see [Choosing the AI approach](ai-keyword-reading.md#choosing-the-ai-approach) | Quality not yet proven against the keyword-list baseline |
+| Infrastructure | CDK in TypeScript, IAM per function, Secrets Manager, CloudWatch | Terraform | Tied to AWS |
 
 Serverless keeps the amount of infrastructure small and suits uncertain traffic. The cost is cold-start risk, managed-service limits and AWS-specific integrations. Per-instance caches are simple but not shared, so each new instance warms its own; a shared cache (ElastiCache) would be the next step if that proved costly. REST API is chosen for direct regional WAF support; an HTTP API would need a different protection design. DynamoDB fits keyed reads, but SQL would suit richer relational queries. Nova Micro is a concrete starting model, not a claim that its classification quality has been proven. The [worked examples](worked-examples.md) and a simple keyword-only baseline are the acceptance comparison.
 
 Region, runtime, model and limits are specified. The traveller service's identity support, sales and travel-fact sources, measured capacity, operating budget and final quality acceptance remain open. The local application is implemented in `app/`. AWS deployment and production integration are still outstanding.
+
+## Rough monthly cost
+
+This is an estimate, not a quote. It uses AWS's published on-demand list prices for US East; London prices are usually slightly higher. Confirm it with the [AWS Pricing Calculator](https://calculator.aws/) once traffic is known.
+
+It assumes one airport, about 200 venues, and 1 million suggestion requests a month (about 33,000 a day).
+
+| Part | How it is charged | About a month |
+| --- | --- | --- |
+| API Gateway REST API | $3.50 per million requests | $3.50 |
+| WAF | $5 per web ACL, $1 per rule, $0.60 per million requests | $8 |
+| Suggestions Lambda | 1 million requests at 1,024 MB for about 200 ms | $3.50 |
+| Refresh Lambda | Every 15 minutes, about 2,900 runs | $1 |
+| Bedrock, Nova Micro | Only changed keywords are read again. Even re-reading every venue on every run would be about 60 million input and 30 million output tokens | Under $1 normally, about $6 at worst |
+| DynamoDB | Each refresh writes a new version; reads are mostly served from Lambda memory | $1–3 |
+| CloudFront, S3, Secrets Manager, CloudWatch | Static files, three secrets, logs and six alarms | $5–10 |
+| **Total, before sign-in** | | **About $25–35** |
+
+**Sign-in is the biggest unknown.** Cognito is free for the first 10,000 monthly active users, then charges per user on its paid tiers. At, say, 50,000 travellers a month that could be several hundred dollars, more than the rest put together. Federating the traveller service's existing sign-in changes this number, so it is the first thing to agree with that service's owner.

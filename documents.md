@@ -1,6 +1,6 @@
 # Documents
 
-For local setup, use the [README](README.md). For the design, start with the [architecture overview](answer.md), then use the [AWS design](aws-deployment.md) for service settings and failure handling.
+For local setup, use the [README](README.md). For the design, start with the [overview](overview.md), then use the [AWS design](aws-deployment.md) for service settings and failure handling.
 
 Editable diagrams and their PNG/SVG copies are in `diagrams/`.
 

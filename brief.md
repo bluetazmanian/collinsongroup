@@ -18,14 +18,14 @@ Two examples show the keyword problem: a fast-food chain might list "fast food, 
 
 | Requirement | Where it's covered | How you'll know it's covered |
 | --- | --- | --- |
-| Recommendations based on preferences | [How it works](answer.md#how-it-works); [examples 1 and 3](worked-examples.md) | A worked example linking preferences to a suggestion |
-| Taking flight time into account | [Preferences and available time](answer.md#preferences-and-available-time); [examples 1 and 2](worked-examples.md), [time rules](aws-deployment.md#time) | Clear time assumptions, what we don't know, and a "not enough time" example |
-| Taking sales into account | [Where offers come from](answer.md#where-offers-come-from); [examples 4 and 5](worked-examples.md), [sales rules](aws-deployment.md#sales) | Where offers come from, and what happens when they're missing or expired |
-| Handling inconsistent keywords | [How it works](answer.md#how-it-works); [examples 1 and 3](worked-examples.md), plus the [refresh sequence](diagrams/airport-trip-planner-catalogue-refresh-sequence.excalidraw) | The approach explained, with an ambiguous-keyword example |
-| A diagram of the front end, back end and infrastructure | [Architecture](answer.md#architecture), plus the [AWS diagram](diagrams/airport-trip-planner-aws-deployment.excalidraw) | Labelled boxes, what each one does, and how data moves |
-| A short reason for each technology | [Technology choices](answer.md#technology-choices), plus the [AWS notes](aws-deployment.md) | For each part: the choice, why, the alternative, and the cost of choosing it |
-| Strengths and trade-offs | [What this approach gives us](answer.md#what-this-approach-gives-us) and [Trade-offs](answer.md#trade-offs) | Concrete trade-offs that matter for this planner |
-| Using pre-built AI rather than training a model | [Choosing the AI approach](answer.md#choosing-the-ai-approach) | Existing AI services weighed up; no training |
+| Recommendations based on preferences | [The approach](overview.md#the-approach); [examples 1 and 3](worked-examples.md) | A worked example linking preferences to a suggestion |
+| Taking flight time into account | [examples 1 and 2](worked-examples.md), [time rules](aws-deployment.md#time) | Clear time assumptions, what we don't know, and a "not enough time" example |
+| Taking sales into account | [examples 4 and 5](worked-examples.md), [sales rules](aws-deployment.md#sales) | Where offers come from, and what happens when they're missing or expired |
+| Handling inconsistent keywords | [The approach](overview.md#the-approach); [examples 1 and 3](worked-examples.md), plus the [refresh sequence](diagrams/airport-trip-planner-catalogue-refresh-sequence.excalidraw) | The approach explained, with an ambiguous-keyword example |
+| A diagram of the front end, back end and infrastructure | The [AWS diagram](diagrams/airport-trip-planner-aws-deployment.excalidraw) | Labelled boxes, what each one does, and how data moves |
+| A short reason for each technology | [The AWS choices](aws-deployment.md#the-aws-choices) and [alternatives](aws-deployment.md#why-this-choice-and-what-we-give-up) | For each part: the choice, why, the alternative, and the cost of choosing it |
+| Strengths and trade-offs | [Decisions](decisions.md) | Concrete trade-offs that matter for this planner |
+| Using pre-built AI rather than training a model | [Choosing the AI approach](ai-keyword-reading.md#choosing-the-ai-approach) | Existing AI services weighed up; no training |
 
 ## What's in and what's out
 

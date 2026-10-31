@@ -2,6 +2,20 @@
 
 How the refresh job asks Amazon Nova Micro what brand keywords mean, and how it checks the answer. This runs only in the background refresh, never on a traveller request ([AWS design](aws-deployment.md#what-happens-every-15-minutes)).
 
+## Choosing the AI approach
+
+The task is narrow: read a shop's own keywords and pick up to three labels from a fixed list. The brief asks for pre-built AI rather than a trained model.
+
+| Option | How it works | Verdict |
+| --- | --- | --- |
+| Keyword list only | A hand-kept table maps words such as "cheap" and "budget" to *affordable* | No AI cost and fully predictable, but it misses new or unusual wording and someone must keep the list up to date. **Kept** as the fallback when the model is unavailable, and as the baseline the model must beat |
+| Text embeddings (Titan or Cohere Embed on Bedrock) | Turns keywords and labels into numbers and matches by similarity | Cheap, but each label needs its own similarity cut-off, and it is harder to explain why a word matched. Not chosen |
+| Amazon Comprehend custom classification | A classifier trained on labelled examples | Needs training data and a trained model, which the brief rules out, plus a paid endpoint for real-time use. Not chosen |
+| A larger model (Claude Haiku, Nova Lite or Pro) | Same prompt, more capable model | Likely better on odd wording, but several times the price per token. Because the model runs in the background, a larger one would add cost, not traveller waiting time. **The upgrade path** if the small model falls short |
+| **Amazon Nova Micro (chosen)** | A small pre-built model on Bedrock picks labels from the fixed list; the app checks every reply before saving it | The cheapest text model on Bedrock and enough for picking from a short list. It is used only during the background refresh |
+
+How the choice is proven is in [Measuring quality](#measuring-quality).
+
 ## The call
 
 | Setting | Value |

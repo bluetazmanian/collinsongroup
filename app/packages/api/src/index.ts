@@ -4,7 +4,7 @@ import {
   CatalogueReader, TravellerClient, TravellerNotFound, TravellerUnauthorised, TravellerUnavailable,
   documentClient, emitMetric, looksLikeJwt, secretReader, tokenVerifier,
 } from '@atp/adapters';
-import { DEFAULT_SETTINGS, recommend, type Settings } from '@atp/rules';
+import { DEFAULT_SETTINGS, checkFlight, recommend, type Settings } from '@atp/rules';
 
 const env = process.env;
 const num = (v: string | undefined, d: number) => (v ? Number(v) : d);
@@ -23,7 +23,7 @@ const traveller = new TravellerClient({
 });
 
 type Code = 'invalid-request' | 'unauthorised' | 'forbidden' | 'unknown-airport' | 'airport-mismatch'
-  | 'too-many-requests' | 'traveller-service-unavailable' | 'internal-error';
+  | 'flight-departed' | 'flight-not-today' | 'flight-time-unreadable' | 'too-many-requests' | 'traveller-service-unavailable' | 'internal-error';
 
 const MESSAGES: Record<Code, string> = {
   'invalid-request': 'Something went wrong with that request.',
@@ -31,6 +31,9 @@ const MESSAGES: Record<Code, string> = {
   forbidden: "You don't have access to this.",
   'unknown-airport': "We don't cover this airport yet.",
   'airport-mismatch': "That isn't your flight's departure airport.",
+  'flight-departed': 'Your flight has already left. Update your trip to plan for your next one.',
+  'flight-not-today': 'Your flight is more than a day away. Come back on the day you fly.',
+  'flight-time-unreadable': "We couldn't read your flight's departure time.",
   'too-many-requests': 'Too many requests. Try again in a few seconds.',
   'traveller-service-unavailable': "We couldn't load your trip details. Try again in a few seconds.",
   'internal-error': 'Something went wrong.',
@@ -115,9 +118,14 @@ export async function handler(event: APIGatewayProxyEvent): Promise<APIGatewayPr
       throw e;
     }
     if (record.flight.departureAirport !== body.airportId) return error(409, 'airport-mismatch');
+    const now = new Date();
+    const flight = checkFlight(record.flight, airport, now, settings);
+    if (flight === 'departed') return error(409, 'flight-departed');
+    if (flight === 'not-today') return error(409, 'flight-not-today');
+    if (flight === 'unreadable') return error(409, 'flight-time-unreadable');
 
     const catalogue = await reader.catalogue(body.airportId);
-    const result = recommend({ traveller: record, airport, catalogue, now: new Date(), limit: body.limit, settings });
+    const result = recommend({ traveller: record, airport, catalogue, now, limit: body.limit, settings });
     return { statusCode: 200, headers: headers(), body: JSON.stringify(result) };
   } catch (e) {
     console.error(JSON.stringify({ msg: 'recommendations failed', error: (e as Error)?.name, requestId: event.requestContext?.requestId }));

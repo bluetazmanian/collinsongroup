@@ -37,4 +37,4 @@ npm run local:down
 
 Your account and saved trip remain in `app/.local-data/`. The local AWS resources are recreated when needed, so use `npm run local:start` again after a restart.
 
-For troubleshooting and test commands, see [Developer setup](developer-setup.md#running-locally). The [architecture overview](answer.md) explains the design, and [Documents](documents.md) lists the technical specifications.
+For troubleshooting and test commands, see [Developer setup](developer-setup.md#running-locally). The [overview](overview.md) explains the design, and [Documents](documents.md) lists the technical specifications.

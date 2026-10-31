@@ -22,6 +22,6 @@ The design makes those limits visible. It labels timing estimates, checks offer 
 
 ## Where to find the detail
 
-The [architecture overview](answer.md) explains the choices and trade-offs. The [AWS design](aws-deployment.md) contains the service settings and failure handling. [Worked examples](worked-examples.md) show six requests through the rules.
+The [AWS design](aws-deployment.md) contains the service choices, settings and failure handling, and [Decisions](decisions.md) records the trade-offs. [Worked examples](worked-examples.md) show six requests through the rules.
 
 All diagrams and their reading copies are listed under [Documents](documents.md). A local application is available in `app/`; the [README](README.md) explains how to start it. AWS deployment, real-service integration and production measurements are still outstanding.

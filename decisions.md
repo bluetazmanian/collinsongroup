@@ -10,7 +10,7 @@ AI interprets the brand keywords when the catalogue refreshes, and stores the re
 
 The [AWS diagram](diagrams/airport-trip-planner-aws-deployment.excalidraw) and [notes](aws-deployment.md) map the design to managed AWS services: CloudFront and S3 for the web app, API Gateway (REST) and Lambda for the API, DynamoDB for the catalogue, EventBridge Scheduler and SQS for the refresh, Bedrock for the keywords, and Cognito, IAM, Secrets Manager and CloudWatch around them.
 
-Serverless fits because traffic follows flight schedules, so it comes in peaks and quiet spells, and there are no servers to look after. The trade-offs (cold starts, Lambda time limits, duplicate queue deliveries) are covered in the notes. The [answer](answer.md#technology-choices) lists the alternatives considered for each part.
+Serverless fits because traffic follows flight schedules, so it comes in peaks and quiet spells, and there are no servers to look after. The trade-offs (cold starts, Lambda time limits, duplicate queue deliveries) are covered in the notes.
 
 ## D-003: Dietary needs are met only by venue-supplied facts
 
@@ -45,4 +45,4 @@ Key choices made in the specs: one endpoint whose `status` drives the screen; ve
 | How travellers sign in | Federate the traveller service's existing sign-in if it has one; to agree with its owner |
 | Sales and timing data | No source is supplied; the design states its assumptions and plays safe rather than making data up |
 | Model quality | Nova Micro must clearly beat the keyword list on at least 200 hand-labelled venues; the pass mark is set with the owner |
-| Traffic and budget | Not given; the [rough cost](answer.md#rough-monthly-cost) assumes 1 million requests a month |
+| Traffic and budget | Not given; the [rough cost](aws-deployment.md#rough-monthly-cost) assumes 1 million requests a month |

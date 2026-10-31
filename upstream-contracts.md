@@ -48,7 +48,7 @@ Authorization: Bearer <planner service credential from Secrets Manager>
 | Departure airport as an IATA code | Picks the catalogue and checks the request | `409` can't be detected |
 | Estimated departure, not just scheduled | Delays change the usable time | Scheduled time is used, with a warning |
 | Gate and boarding-close time | Replace the estimates | 30-minute boarding and 15-minute walk estimates are used |
-| UTC timestamps | Time maths | The adapter converts using the airport's time zone |
+| UTC timestamps | Time maths | A time without an offset is read in the airport's time zone. An unreadable departure gives `409 flight-time-unreadable`; an unreadable estimate or boarding time is ignored |
 
 **Errors the planner expects:** `401` or `403` → the planner returns `401` to the browser; `404` (no record) → `503` with a "no trip found" message; `5xx` or no answer within 2 seconds → counts towards the circuit breaker and returns `503`.
 
@@ -86,6 +86,8 @@ Authorization: Bearer <planner service credential from Secrets Manager>
 ```
 
 Only `venueId`, `name` and `keywords` are essential. Everything else improves the answer when present: opening hours let the planner drop closed venues; `serviceMinutes` replaces the default visit length; location appears on the result card; `dietary` (for example `["vegan", "halal"]`), supplied by the venue, is the only thing that can satisfy a dietary hard rule. Opening hours are in airport local time; the planner converts them using the airport's time zone.
+
+The refresh job cleans what it receives before publishing. Days may be written in any case, short or full (`MON`, `mon`, `Monday`); times must be `HH:MM`, up to `24:00`. Unreadable opening-hours entries are dropped, and a venue with none left counts as "hours unknown", not closed. Dietary facts are lower-cased. A venue listed twice keeps its first entry. Offers without readable start and end times, or ending before they start, are dropped.
 
 **Questions for the owners:** How big is a typical airport listing? How many requests per minute can we make? Do you have a "changed since" filter? Is `venueId` stable over time?
 

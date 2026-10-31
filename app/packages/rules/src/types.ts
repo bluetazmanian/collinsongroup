@@ -97,6 +97,10 @@ export interface Settings {
   staleLimitMinutes: number;
   headToGateMinutes: number;
   defaultLimit: number;
+  /** How far ahead a departure can be and still get suggestions for now. */
+  planAheadHours: number;
+  /** How far in the future a refresh time can be before it is treated as a clock error. */
+  clockSkewMinutes: number;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -104,4 +108,6 @@ export const DEFAULT_SETTINGS: Settings = {
   staleLimitMinutes: 240,
   headToGateMinutes: 10,
   defaultLimit: 10,
+  planAheadHours: 24,
+  clockSkewMinutes: 5,
 };
