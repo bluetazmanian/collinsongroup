@@ -5,17 +5,16 @@
 @page{size:A4 landscape;margin:9mm 12mm 13mm}
 @media print{body{background:white;font-size:10pt;line-height:1.2}main{max-width:none;margin:0;padding:0}h1{font-size:15pt;margin:0 0 1.5mm}h2{font-size:13pt;margin:1.5mm 0 1mm;break-after:avoid}h3{font-size:10.5pt;margin:1mm 0 1mm;break-after:avoid}p{margin:0 0 1mm}figure{margin:0 0 1.5mm}table{font-size:9.5pt;line-height:1.15;margin:1.5mm 0 2mm}th,td{padding:1mm 1.5mm}th:first-child{width:23%}tr{break-inside:avoid}thead{display:table-header-group}a{color:inherit;text-decoration:none}.source-links{display:none}.technology-grid{gap:1.5mm 6mm;margin:1mm 0 0;font-size:9.5pt;line-height:1.15}.technology-grid>div{padding-top:1mm}.technology-grid dd{font-size:9.5pt;line-height:1.15;margin:0.5mm 0 0}.sheet+.sheet{border:0;margin:0;padding:0;break-before:page}}
 </style></head><body><main><section class="sheet"><h1 id="airport-trip-planner-solution-design">Airport Trip Planner: solution design</h1>
-<p>The planner recommends airport restaurants and shops using preferences, flight time and sales. A pre-built AI model interprets shop descriptions in the background. Prepared venue information is then reused for fast recommendations, even when AI is unavailable. Incorrect venue information and estimated visit times can affect the results.</p>
+<p>The planner recommends airport restaurants and shops using preferences, flight time and sales. A pre-built AI model interprets shop descriptions in the background. Prepared venue information could then be reused for fast recommendations, even when AI is unavailable. But incorrect venue information and estimated visit times can affect the results.</p>
 <h2 id="1-aws-infrastructure">1. AWS infrastructure</h2>
 <figure><a href="diagrams/aws-overview.svg" aria-label="Open full-size diagram"><img src="diagrams/aws-overview.svg" alt="AWS deployment showing browser calls to CloudFront, Cognito and API Gateway, with shared storage, background refresh and external services." /></a></figure>
 <p class="source-links"><a href="diagrams/aws-overview.excalidraw">Edit in Excalidraw</a> · <a href="diagrams/aws-overview.png">PNG</a></p>
 <h3 id="technology-choices-and-trade-offs">Technology choices and trade-offs</h3>
-<dl class="technology-grid"><div><dt>Private S3 + CloudFront</dt><dd>Static hosting without servers. A regional outage interrupts recommendations.</dd></div><div><dt>API Gateway REST, Cognito + WAF</dt><dd>Handles sign-in and protects API access. Assumes the traveller service accepts Cognito access tokens.</dd></div><div><dt>Lambda + DynamoDB</dt><dd>Functions scale separately. Each reads a complete version of the venue data. Starting a new function instance adds delay.</dd></div><div><dt>EventBridge Scheduler + SQS</dt><dd>Schedules venue updates every 15 minutes per airport (design setting). The queue buffers work when updates take longer.</dd></div><div><dt>Bedrock (Nova Micro)</dt><dd>A pre-built AI model interprets the different words brands use to describe their shops. This avoids training a model, but adds running costs.</dd></div><div><dt>CloudWatch + Datadog</dt><dd>Monitor availability, response time and how current the venue information is.</dd></div></dl>
+<dl class="technology-grid"><div><dt>Private S3 + CloudFront</dt><dd>Static hosting without servers. <strong>A regional outage interrupts recommendations.</strong></dd></div><div><dt>API Gateway REST, Cognito + WAF</dt><dd>Handles sign-in and protects API access. <strong>Assumes the traveller service accepts Cognito access tokens.</strong></dd></div><div><dt>Lambda + DynamoDB</dt><dd>Functions scale separately. Each reads a complete version of the venue data. <strong>Starting a new function instance adds delay.</strong></dd></div><div><dt>EventBridge Scheduler + SQS</dt><dd>Schedules venue updates. <strong>The queue buffers work when updates take longer.</strong></dd></div><div><dt>Bedrock (Nova Micro)</dt><dd>A pre-built AI model interprets the different words brands use to describe their shops. <strong>This avoids training a model, but adds running costs.</strong></dd></div><div><dt>CloudWatch + Datadog</dt><dd>Monitor availability, response time and how current the venue information is.</dd></div></dl>
 </section><section class="sheet"><h2 id="2-backend-components">2. Backend components</h2>
 <figure><a href="diagrams/solution-components.svg" aria-label="Open full-size diagram"><img src="diagrams/solution-components.svg" alt="UML components separating recommendation rules and trusted reads from background feed preparation and publication." /></a></figure>
 <p class="source-links"><a href="diagrams/solution-components.excalidraw">Edit in Excalidraw</a> · <a href="diagrams/solution-components.png">PNG</a></p>
 <div class="decision-grid"><div><h3 id="recommendation-rules">Recommendation rules</h3>
-<p>The visit starts now within one accessible airport area.</p>
 <table>
 <thead>
 <tr>
@@ -43,7 +42,7 @@
 </tbody>
 </table>
 </div><div><h3 id="technology-and-quality-objectives">Technology and quality objectives</h3>
-<p>TypeScript / Node.js provides shared data types for both functions. Decision rules are separate from network and storage code, so they can be tested independently.</p>
+<p>TypeScript / Node.js provides shared data types for both functions.</p>
 <table>
 <thead>
 <tr>
@@ -67,7 +66,6 @@
 </tbody>
 </table>
 </div></div></section><section class="sheet"><h2 id="3-frontend-design">3. Frontend design</h2>
-<p>The browser shows the traveller’s trip and supports preference edits if the traveller service accepts updates. The backend reads the trip independently and never trusts flight or preference values sent by the browser.</p>
 <figure><a href="diagrams/frontend-design.svg" aria-label="Open full-size diagram"><img src="diagrams/frontend-design.svg" alt="Frontend responsibilities for screens, session state, sign-in, trip management and recommendation requests, with external API boundaries." /></a></figure>
 <p class="source-links"><a href="diagrams/frontend-design.excalidraw">Edit in Excalidraw</a> · <a href="diagrams/frontend-design.png">PNG</a></p>
 <h3 id="browser-technology-choices">Browser technology choices</h3>
@@ -81,15 +79,15 @@
 <tbody>
 <tr>
 <td>HTML / CSS / JavaScript</td>
-<td>A small, static website with no framework to maintain. A framework would make a larger website easier to organise and maintain.</td>
+<td>A small, static website with no framework to maintain. <strong>A framework would make a larger website easier to organise and maintain.</strong></td>
 </tr>
 <tr>
 <td>Cognito + PKCE</td>
-<td>Handles sign-in; the APIs limit each traveller’s access to their own trip. Tokens stay in memory, so reloading restarts the browser session.</td>
+<td>Handles sign-in; the APIs limit each traveller’s access to their own trip. <strong>Tokens stay in memory, so reloading restarts the browser session.</strong></td>
 </tr>
 <tr>
 <td>DOM + semantic HTML</td>
-<td>Shop descriptions cannot insert HTML into the page. Labelled controls, keyboard navigation and clear status messages support accessibility.</td>
+<td>Shop descriptions are displayed as text to prevent embedded code from running. Labelled controls, keyboard navigation and clear status messages support accessibility.</td>
 </tr>
 </tbody>
 </table>

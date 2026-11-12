@@ -1,6 +1,6 @@
 # Airport Trip Planner: solution design
 
-The planner recommends airport restaurants and shops using preferences, flight time and sales. A pre-built AI model interprets shop descriptions in the background. Prepared venue information is then reused for fast recommendations, even when AI is unavailable. Incorrect venue information and estimated visit times can affect the results.
+The planner recommends airport restaurants and shops using preferences, flight time and sales. A pre-built AI model interprets shop descriptions in the background. Prepared venue information could then be reused for fast recommendations, even when AI is unavailable. But incorrect venue information and estimated visit times can affect the results.
 
 ## 1. AWS infrastructure
 
@@ -12,11 +12,11 @@ The planner recommends airport restaurants and shops using preferences, flight t
 
 | Technology | Reason and trade-off |
 | --- | --- |
-| Private S3 + CloudFront | Static hosting without servers. A regional outage interrupts recommendations. |
-| API Gateway REST, Cognito + WAF | Handles sign-in and protects API access. Assumes the traveller service accepts Cognito access tokens. |
-| Lambda + DynamoDB | Functions scale separately. Each reads a complete version of the venue data. Starting a new function instance adds delay. |
-| EventBridge Scheduler + SQS | Schedules venue updates every 15 minutes per airport (design setting). The queue buffers work when updates take longer. |
-| Bedrock (Nova Micro) | A pre-built AI model interprets the different words brands use to describe their shops. This avoids training a model, but adds running costs. |
+| Private S3 + CloudFront | Static hosting without servers. **A regional outage interrupts recommendations.** |
+| API Gateway REST, Cognito + WAF | Handles sign-in and protects API access. **Assumes the traveller service accepts Cognito access tokens.** |
+| Lambda + DynamoDB | Functions scale separately. Each reads a complete version of the venue data. **Starting a new function instance adds delay.** |
+| EventBridge Scheduler + SQS | Schedules venue updates. **The queue buffers work when updates take longer.** |
+| Bedrock (Nova Micro) | A pre-built AI model interprets the different words brands use to describe their shops. **This avoids training a model, but adds running costs.** |
 | CloudWatch + Datadog | Monitor availability, response time and how current the venue information is. |
 
 ## 2. Backend components
@@ -27,8 +27,6 @@ The planner recommends airport restaurants and shops using preferences, flight t
 
 ### Recommendation rules
 
-The visit starts now within one accessible airport area.
-
 | Input | Effect on recommendations |
 | --- | --- |
 | Flight time | Recommend places the traveller has time to visit before boarding. |
@@ -38,7 +36,7 @@ The visit starts now within one accessible airport area.
 
 ### Technology and quality objectives
 
-TypeScript / Node.js provides shared data types for both functions. Decision rules are separate from network and storage code, so they can be tested independently.
+TypeScript / Node.js provides shared data types for both functions.
 
 | Quality goal | Measure and 30-day design target |
 | --- | --- |
@@ -48,8 +46,6 @@ TypeScript / Node.js provides shared data types for both functions. Decision rul
 
 ## 3. Frontend design
 
-The browser shows the traveller’s trip and supports preference edits if the traveller service accepts updates. The backend reads the trip independently and never trusts flight or preference values sent by the browser.
-
 ![Frontend responsibilities for screens, session state, sign-in, trip management and recommendation requests, with external API boundaries.](diagrams/frontend-design.svg)
 
 [Edit in Excalidraw](diagrams/frontend-design.excalidraw) · [PNG](diagrams/frontend-design.png)
@@ -58,6 +54,6 @@ The browser shows the traveller’s trip and supports preference edits if the tr
 
 | Technology | Reason and trade-off |
 | --- | --- |
-| HTML / CSS / JavaScript | A small, static website with no framework to maintain. A framework would make a larger website easier to organise and maintain. |
-| Cognito + PKCE | Handles sign-in; the APIs limit each traveller’s access to their own trip. Tokens stay in memory, so reloading restarts the browser session. |
-| DOM + semantic HTML | Shop descriptions cannot insert HTML into the page. Labelled controls, keyboard navigation and clear status messages support accessibility. |
+| HTML / CSS / JavaScript | A small, static website with no framework to maintain. **A framework would make a larger website easier to organise and maintain.** |
+| Cognito + PKCE | Handles sign-in; the APIs limit each traveller’s access to their own trip. **Tokens stay in memory, so reloading restarts the browser session.** |
+| DOM + semantic HTML | Shop descriptions are displayed as text to prevent embedded code from running. Labelled controls, keyboard navigation and clear status messages support accessibility. |
