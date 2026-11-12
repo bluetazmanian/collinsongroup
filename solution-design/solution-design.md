@@ -1,6 +1,6 @@
 # Airport Trip Planner: solution design
 
-The planner recommends airport restaurants and shops using preferences, flight time and sales. A pre-built AI model interprets shop descriptions in the background. Prepared venue information could then be reused for fast recommendations, even when AI is unavailable. But incorrect venue information and estimated visit times can affect the results.
+The planner recommends airport restaurants and shops using a traveller’s preferences, flight time and current sales. A pre-built AI model interprets shop descriptions in the background when venue data is updated. Requests use the prepared data, so recommendations remain fast when the model is unavailable. Results depend on accurate venue information and estimated visit times.
 
 ## 1. AWS infrastructure
 
@@ -12,12 +12,12 @@ The planner recommends airport restaurants and shops using preferences, flight t
 
 | Technology | Reason and trade-off |
 | --- | --- |
-| Private S3 + CloudFront | Static hosting without servers. **A regional outage interrupts recommendations.** |
+| Private S3 + CloudFront | Static hosting without servers. **The backend runs in one region, so a regional outage interrupts recommendations.** |
 | API Gateway REST, Cognito + WAF | Handles sign-in and protects API access. **Assumes the traveller service accepts Cognito access tokens.** |
-| Lambda + DynamoDB | Functions scale separately. Each reads a complete version of the venue data. **Starting a new function instance adds delay.** |
-| EventBridge Scheduler + SQS | Schedules venue updates. **The queue buffers work when updates take longer.** |
+| Lambda + DynamoDB | Functions scale separately. Recommendations read a complete version of the venue data. **Starting a new function instance adds delay.** |
+| EventBridge Scheduler + SQS | Schedules venue updates and buffers them when they take longer. **Venue changes appear after the next successful update.** |
 | Bedrock (Nova Micro) | A pre-built AI model interprets the different words brands use to describe their shops. **This avoids training a model, but adds running costs.** |
-| CloudWatch + Datadog | Monitor availability, response time and how current the venue information is. |
+| CloudWatch + Datadog | CloudWatch collects logs and metrics; Datadog tracks targets. **Using Datadog adds cost and shares monitoring data with an external provider.** |
 
 ## 2. Backend components
 
@@ -29,9 +29,9 @@ The planner recommends airport restaurants and shops using preferences, flight t
 
 | Input | Effect on recommendations |
 | --- | --- |
-| Flight time | Recommend places the traveller has time to visit before boarding. |
+| Flight time | Recommend places the traveller has time to visit before boarding. With too little time, advise going to the gate. |
 | Preferences | Show matching places first. Dietary requirements use information supplied by the venue. |
-| Sales | Promote valid offers among suitable places. Without preferences, places with offers appear first. |
+| Sales | Promote valid offers among suitable places. Without preferences, places with offers appear first. Sales data comes from an assumed external feed. |
 | Brand descriptions | Recognise that different words can mean the same thing. For example, “cheap” and “budget” both describe an affordable option. |
 
 ### Technology and quality objectives
@@ -49,6 +49,8 @@ TypeScript / Node.js provides shared data types for both functions.
 ![Frontend responsibilities for screens, session state, sign-in, trip management and recommendation requests, with external API boundaries.](diagrams/frontend-design.svg)
 
 [Edit in Excalidraw](diagrams/frontend-design.excalidraw) · [PNG](diagrams/frontend-design.png)
+
+The browser reads the trip to display it. The backend gets the trip separately to calculate recommendations.
 
 ### Browser technology choices
 

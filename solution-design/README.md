@@ -12,7 +12,7 @@ The opening explains why AI prepares venue information in the background. The ba
 
 The [original exercise brief](brief/principal-test-collisiongroup.pdf) remains the requirements source. The [review and response](reviews/) are separate from the proposal.
 
-The [change record](reviews/review-response.md#browser-and-gateway-placement) describes the latest diagram changes. Earlier decisions remain as history; independent reviews are unchanged.
+The [change record](reviews/review-response.md#final-review-wording-corrections) describes the final review corrections. Earlier decisions remain as history; independent reviews are unchanged.
 
 The AWS view shows the browser's connections to website delivery, sign-in and the API, alongside the deployed resources. The frontend view explains the browser's components and service calls in more detail. Smaller diagram fonts and more space between resources keep the three-page layout readable.
 

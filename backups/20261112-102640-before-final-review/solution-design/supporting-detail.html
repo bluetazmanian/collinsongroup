@@ -1,0 +1,374 @@
+<!doctype html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Airport Trip Planner: supporting detail</title><style>
+:root{color-scheme:light;--ink:#182735;--muted:#475569;--blue:#1d4ed8;--line:#d5dfeb}
+*{box-sizing:border-box}body{margin:0;background:#edf1f6;color:var(--ink);font:16px/1.6 Arial,Helvetica,sans-serif}main{max-width:1240px;margin:28px auto;padding:40px 48px 55px;background:white;border:1px solid var(--line);border-radius:12px}h1{font-size:34px;line-height:1.2;margin:0 0 22px;color:#173f68}h2{font-size:26px;line-height:1.3;border-top:1px solid var(--line);padding-top:22px;margin:36px 0 15px;color:#173f68}p,li{max-width:92ch}p{margin:0 0 16px}li{margin-bottom:6px}a{color:var(--blue)}a:focus-visible{outline:2px solid var(--blue);outline-offset:4px}code{font-size:.9em;overflow-wrap:anywhere;background:#f2f5f8;padding:1px 4px;border-radius:3px}table{border-collapse:collapse;width:100%;font-size:14px;line-height:1.45;margin:20px 0 25px}th,td{border:1px solid var(--line);padding:10px 12px;text-align:left;vertical-align:top}th{background:#edf3fc;color:#173f68}figure.diagram{margin:24px 0 14px;border:1px solid var(--line);background:#f4f5f7;border-radius:10px;padding:10px}figure.diagram>h2{border:0;padding:0;margin:8px 8px 20px;font-size:24px}figure img{display:block;width:100%;height:auto}#contents+ol{columns:2;max-width:none}pre{overflow:auto}nav{margin-bottom:24px;font-size:14px}
+@media(max-width:800px){main{margin:0;padding:22px 16px;border:0;border-radius:0}h1{font-size:29px}h2{font-size:24px}table{display:block;overflow:auto}#contents+ol{columns:1}}
+@page{size:A4 portrait;margin:15mm 15mm 17mm}
+@page landscape{size:A4 landscape;margin:9mm}
+@page portrait{size:A4 portrait;margin:10mm}
+@media print{body{background:white;font-size:10.2pt;line-height:1.32}main{max-width:none;margin:0;padding:0;border:0;border-radius:0}h1{font-size:23pt}h2{font-size:15pt;margin:6mm 0 3mm;padding-top:3mm;break-after:avoid}p{margin-bottom:3mm}table{font-size:9pt;line-height:1.3;margin:3mm 0 4mm}th,td{padding:1.5mm}tr{break-inside:avoid}thead{display:table-header-group}a{color:inherit;text-decoration:none}code{background:none}figure.diagram{border:0;padding:0;margin:0;break-before:page;break-after:page;break-inside:avoid;border-radius:0}figure.landscape{page:landscape;height:182mm}figure.portrait{page:portrait;height:268mm}figure.diagram>h2{border:0;padding:0;margin:0 0 4mm;font-size:15pt;line-height:1.2}figure>a{display:block;width:100%;height:calc(100% - 13mm)}figure img{width:100%;height:100%;object-fit:contain}#contents+ol{columns:2;font-size:9.5pt}p.source-links,nav{display:none}}
+
+@media print{body.solution-design #quality-security-and-improvement{break-before:page}}
+</style></head><body class="supporting-detail"><main><nav><a href="solution-design.html">Main proposal</a> · <a href="supporting-detail.html">Supporting detail</a></nav><h1 id="airport-trip-planner-supporting-design-detail">Airport Trip Planner: supporting design detail</h1>
+<p>This document supports the <a href="solution-design.html">main proposal</a>. It contains six deeper views: the decision flow, components, two sequences, full deployment and monitoring. Contracts and validation support the headline decisions. The scope and numerical-assumption statement in the main proposal apply here too.</p>
+<h2 id="contents">Contents</h2>
+<ol>
+<li><a href="#components-and-request-contract">Components and request contract</a></li>
+<li><a href="#request-sequence">Request sequence</a></li>
+<li><a href="#catalogue-preparation-and-publication">Catalogue preparation and publication</a></li>
+<li><a href="#recommendation-decisions">Recommendation decisions</a></li>
+<li><a href="#time-preferences-and-source-facts">Time, preferences and source facts</a></li>
+<li><a href="#timing-and-capacity-settings">Timing and capacity settings</a></li>
+<li><a href="#deployment-and-identity">Deployment and identity</a></li>
+<li><a href="#measurement-and-monitoring">Measurement and monitoring</a></li>
+<li><a href="#security-and-data-handling">Security and data handling</a></li>
+<li><a href="#validation-and-standards">Validation and standards</a></li>
+</ol>
+<figure class="diagram landscape"><h2 id="components-and-request-contract">Components and request contract</h2><a href="diagrams/solution-components.svg" aria-label="Open full-size diagram"><img src="diagrams/solution-components.svg" alt="UML components separating orchestration, adapters and pure decision rules." /></a></figure>
+<p class="source-links"><a href="diagrams/solution-components.excalidraw">Edit components</a> · <a href="diagrams/solution-components.png">PNG</a></p>
+<p>The gateway authenticates access and validates the request shape. The request handler checks its trusted access context and coordinates reads. Adapters own network, storage and provider I/O. Pure decision rules receive the current instant, trip, airport profile and catalogue as inputs; they do not read the clock or call external systems themselves.</p>
+<table>
+<thead>
+<tr>
+<th>Responsibility</th>
+<th>Contract</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Request handler</td>
+<td>Receives airport ID and result limit, plus gateway-verified claims. Coordinates reads, enforces the application deadline and records the final outcome.</td>
+</tr>
+<tr>
+<td>Traveller adapter</td>
+<td>Reads only the authenticated traveller’s record under the agreed issuer/scopes contract; applies a subject-scoped cache, deadline and circuit breaker.</td>
+</tr>
+<tr>
+<td>Catalogue reader</td>
+<td>Loads the airport profile first; after trip validation, reads the active pointer and complete immutable snapshot.</td>
+</tr>
+<tr>
+<td>Decision rules</td>
+<td>Compute usable time, apply source-backed constraints, rank preferences and construct deterministic reasons.</td>
+</tr>
+<tr>
+<td>Refresh coordinator</td>
+<td>Acquires airport ownership, bounds preparation work and coordinates publication.</td>
+</tr>
+<tr>
+<td>Feed adapters</td>
+<td>Fetch all venue pages and optional offers; validate schemas, deduplicate records and retain source timestamps.</td>
+</tr>
+<tr>
+<td>Keyword interpreter</td>
+<td>Combines validated model concepts with keyword synonyms; never supplies safety or commercial facts.</td>
+</tr>
+<tr>
+<td>Catalogue writer</td>
+<td>Writes versioned records and atomically publishes the active pointer and completed-job state under the lease condition.</td>
+</tr>
+</tbody>
+</table>
+<p>Both Lambda functions use the same versioned vocabulary and data contracts. Interpretation reuse is keyed by normalised source keywords, venue kind, prompt, vocabulary and model configuration, so a model or policy change can invalidate cached labels.</p>
+<p><code>POST /recommendations</code> accepts an airport and a result limit up to ten. It never accepts replacement flight facts or another traveller’s subject. Useful outcomes (<code>ok</code>, <code>head-to-gate</code>, <code>no-suitable</code>) return HTTP 200. Missing or over-age catalogues return <code>no-reliable-data</code> with HTTP 503. Dependency errors return 503, invalid input 400, rejected access 401/403, and a mismatched or departed trip 409. Capacity rejection returns 429 and remains a service failure for measurement. Responses include catalogue age, timing assumptions and warnings, with <code>private, no-store</code>.</p>
+<figure class="diagram landscape"><h2 id="request-sequence">Request sequence</h2><a href="diagrams/recommendation-sequence.svg" aria-label="Open full-size diagram"><img src="diagrams/recommendation-sequence.svg" alt="recommendation sequence"></a></figure>
+<p class="source-links"><a href="diagrams/recommendation-sequence.mmd">Mermaid source</a> · <a href="diagrams/recommendation-sequence.svg">SVG</a></p>
+<p>The airport profile is read before traveller context, matching the overview’s “profile first” annotation. A missing profile fails clearly. The catalogue read follows validation of the traveller’s departure airport and flight time. Catalogue failure remains distinct from a valid decision that nothing is suitable. The browser uses a bounded retry with a clear waiting state instead of repeatedly submitting a failed request.</p>
+<figure class="diagram portrait"><h2 id="catalogue-preparation-and-publication">Catalogue preparation and publication</h2><a href="diagrams/catalogue-refresh-sequence.svg" aria-label="Open full-size diagram"><img src="diagrams/catalogue-refresh-sequence.svg" alt="catalogue refresh sequence"></a></figure>
+<p class="source-links"><a href="diagrams/catalogue-refresh-sequence.mmd">Mermaid source</a> · <a href="diagrams/catalogue-refresh-sequence.svg">SVG</a></p>
+<p>EventBridge Scheduler enqueues an airport job every ten minutes. The stable job identity includes airport and schedule slot. A DynamoDB conditional lease permits one active preparation per airport. Deliveries already completed or superseded by a later successful fetch are acknowledged. A concurrent scheduled delivery is recorded as coalesced; the active owner or next schedule performs the refresh.</p>
+<p>Required venue-feed failure leaves the previous catalogue active. Offers are optional: feed failure publishes venue data without offers. Every venue page must be fetched before a new catalogue is published. If source fetch or complete snapshot writes cannot finish within the job budget, publication is abandoned and the delivery fails for redelivery.</p>
+<p>Only IDs, names, kinds and keywords reach Bedrock. Output validation checks JSON, requested IDs and permitted concepts, rejects repeated IDs and removes dietary or unsupported concepts. Accepted model labels are always unioned with deterministic synonyms. Empty concepts remain a ranking limitation rather than an exclusion. Provider errors, throttling and budget expiry stop further inference for that job; all remaining venues use keyword matching. Missing enrichment is retried in later refreshes.</p>
+<p>A new version is allocated before its records are written. The active-pointer switch and completed-job record are committed in one DynamoDB transaction that checks the lease owner and fencing token. A worker that loses ownership cannot publish. Readers use strongly consistent reads for the pointer and the first load of a version, then cache that immutable snapshot. Partial versions never become active. A crash before commit leaves the old version active; a crash after commit is recognised by the job record on redelivery.</p>
+<p>SQS handles redelivery after visibility expires, with exhausted deliveries sent to a dead-letter queue. There is no additional one/two/four/eight-minute retry schedule and no ten-minute per-job SLO. A new scheduled slot can run while a failed delivery waits; the airport lease prevents overlapping owners. A stale retry is skipped if a newer completed fetch already covers its schedule slot. Queue depth, oldest message, lease contention and catalogue age expose backlog.</p>
+<table>
+<thead>
+<tr>
+<th>Record</th>
+<th>Contents and lifetime</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Airport profile</td>
+<td>Time zone, accessible-area assumption and estimated boarding/walking allowances.</td>
+</tr>
+<tr>
+<td>Active pointer</td>
+<td>Complete catalogue version, source-fetch time and publication fencing token.</td>
+</tr>
+<tr>
+<td>Catalogue version</td>
+<td>Source venue/offer facts, original keywords, concepts, interpretation version and enrichment status. Superseded versions expire after 24 hours.</td>
+</tr>
+<tr>
+<td>Airport lease</td>
+<td>Owner, fencing token and expiry; ownership uses conditional comparisons, never TTL deletion.</td>
+</tr>
+<tr>
+<td>Job record</td>
+<td>Stable identity, completion/coalescing state and outcome; retained seven days, longer than the four-day work-queue retention.</td>
+</tr>
+</tbody>
+</table>
+<p>A dead-letter record is retained for 14 days. Redrive first checks current catalogue coverage; it does not blindly repeat old work. DynamoDB TTL is cleanup, not an immediate-deletion guarantee. The oldest required-feed fetch time, rather than publication time, determines catalogue age.</p>
+<figure class="diagram landscape"><h2 id="recommendation-decisions">Recommendation decisions</h2><a href="diagrams/recommendation-flow.svg" aria-label="Open full-size diagram"><img src="diagrams/recommendation-flow.svg" alt="Recommendation flow: hard constraints filter venues; preferences and valid offers determine their order." /></a></figure>
+<p class="source-links"><a href="diagrams/recommendation-flow.excalidraw">Edit decision flow</a> · <a href="diagrams/recommendation-flow.png">PNG</a></p>
+<p>Matching venues form the first ranking tier. Other eligible venues remain clearly labelled alternatives, so an interpretation miss cannot silently remove them.</p>
+<table>
+<thead>
+<tr>
+<th>Ranking input</th>
+<th>Rule</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Matched preference</td>
+<td>+10 points; compound preferences require all constituent concepts.</td>
+</tr>
+<tr>
+<td>Relevant offer</td>
+<td>+5 for a matching venue, or when no preferences are selected. The catalogue must be fresh and the offer valid throughout the visit.</td>
+</tr>
+<tr>
+<td>Tight timing</td>
+<td>−5 when a visit uses more than 80% of available time.</td>
+</tr>
+<tr>
+<td>Equal score</td>
+<td>More spare time, then venue name.</td>
+</tr>
+</tbody>
+</table>
+<p>With no preferences, valid offers rank first, then spare time and name. The service returns results, <code>head-to-gate</code> below ten usable minutes, <code>no-suitable</code> when hard constraints exclude every venue, or <code>no-reliable-data</code> for missing or over-age catalogue data.</p>
+<table>
+<thead>
+<tr>
+<th>Catalogue age</th>
+<th>Behaviour</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Under 30 minutes</td>
+<td>Use venue facts and valid offers.</td>
+</tr>
+<tr>
+<td>From 30 minutes through four hours</td>
+<td>Warn about stale data and hide offers.</td>
+</tr>
+<tr>
+<td>Beyond four hours, or missing</td>
+<td>Return <code>no-reliable-data</code>.</td>
+</tr>
+</tbody>
+</table>
+<p>Reasons come from matched concepts and source fields. Timing and food-specific dietary checks follow the rules below.</p>
+<h2 id="time-preferences-and-source-facts">Time, preferences and source facts</h2>
+<p>The service is for a current airport visit. The website states this scope and assumes the listed venues are reachable from the traveller’s current airport area. Supporting future arrival would require an arrival instant and location context; the design does not infer them from flight departure.</p>
+<p>Usable time is boarding-close minus now minus walking time. If boarding-close is absent, it is departure minus the 30-minute allowance. Service time uses a source duration when available; otherwise quick food/coffee takes 15 minutes, sit-down dining 45 and other visits 20. Missing inputs are labelled estimates. A non-positive result, or fewer than ten minutes, produces <code>head-to-gate</code>.</p>
+<p><strong>Overnight example:</strong> at 21:00 with a 07:00 flight tomorrow, an intended visit now is checked against tonight’s opening hours. A shop open only from 06:00 is not presented as open now. A request to plan tomorrow’s visit is outside scope. Overnight hours such as 20:00–02:00 are evaluated across the date boundary in the airport’s time zone. Offers must be valid from now through the estimated visit finish.</p>
+<p>A required dietary condition applies only to food venues and must be backed by a venue-supplied field. A missing field means the food venue cannot be verified for that condition; it does not exclude a non-food shop. If no food venue has dietary data, the result explains that limitation and can still offer suitable shops. Unknown opening hours are warned about rather than represented as verified opening.</p>
+<p>Preference matching operates on the union of synonyms and accepted model concepts. The matched tier sorts ahead of alternatives, then uses the main proposal’s scoring rules. With no preferences, dietary/time constraints still apply; valid offers rank first, then spare time and name. Without source prices, “affordable” describes a keyword match, not a monetary promise.</p>
+<p>The product outcomes and HTTP codes are deliberately separate. <code>no-suitable</code> is a valid result after hard constraints; failure to load reliable inputs is a service failure. Missing offers never makes an otherwise useful recommendation fail.</p>
+<h2 id="timing-and-capacity-settings">Timing and capacity settings</h2>
+<table>
+<thead>
+<tr>
+<th>Area</th>
+<th>Coherent starting settings and consequence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Interactive path</td>
+<td>Gateway-observed good response within 2 seconds; application budget 1.5 seconds; Lambda and gateway integration timeouts 3 seconds. The SLO permits a tail and is not a promise that every attempt finishes in 2 seconds.</td>
+</tr>
+<tr>
+<td>Budget allocation</td>
+<td>Traveller call at most 600 ms; profile and catalogue I/O share 400 ms; rules/serialization/handler overhead use the remaining 500 ms. An overall timer bounds the combined work. The 500 ms outside the application budget accommodates authorisation, cold start and transport; load tests check that allowance.</td>
+</tr>
+<tr>
+<td>Caches</td>
+<td>Traveller context 60 seconds per verified subject; pointer 30 seconds; airport profile five minutes. A warm runtime can therefore briefly lag a changed preference, flight or catalogue. The local circuit breaker opens after five source failures and probes after 30 seconds.</td>
+</tr>
+<tr>
+<td>Refresh cadence</td>
+<td>Ten-minute schedule; catalogue fresh under 30 minutes. Two missed opportunities have some margin before data becomes stale, depending on fetch and publication time. Freshness is measured, not inferred from the existence of the schedule.</td>
+</tr>
+<tr>
+<td>Worker envelope</td>
+<td>Application work budget 120 seconds within a 180-second Lambda timeout; source fetch up to 20 seconds, total inference up to 60, complete writes/commit up to 20, and 20 for orchestration/cleanup. Any stage can finish early; the total timer remains authoritative.</td>
+</tr>
+<tr>
+<td>AI limits</td>
+<td>At most 20 venues per call, 200 venues sent for inference per job, three model concepts per venue, 1,000 output tokens and 10 seconds per call. Calls stop when the 60-second aggregate inference budget expires, even if fewer than 200 venues were interpreted. All source venues still enter the snapshot with synonyms if source and write budgets permit.</td>
+</tr>
+<tr>
+<td>Ownership</td>
+<td>Airport lease lasts 240 seconds, exceeding the worker’s maximum runtime. Conditional fencing rejects an expired owner’s publication even if its late request arrives.</td>
+</tr>
+<tr>
+<td>Queue handling</td>
+<td>Batch size one, batching window zero, visibility 1,080 seconds (six times the 180-second function timeout), maximum receive count five. Scheduler delivery has its own dead-letter handling. These queue delays are not a refresh completion promise.</td>
+</tr>
+<tr>
+<td>Capacity</td>
+<td>Initial recommendation concurrency 50; refresh concurrency five, independently bounded. Source quotas and measured catalogue size determine final settings; no traffic capacity is claimed before load tests.</td>
+</tr>
+<tr>
+<td>Retention</td>
+<td>Superseded snapshots 24 hours; work queue four days; job records seven days; dead-letter records 14 days; redacted diagnostic logs 30 days in both monitoring systems. Audit retention is agreed separately.</td>
+</tr>
+</tbody>
+</table>
+<p>The availability objective is conditional on compatible upstream commitments. For example, allocating at most 0.05% bad attempts to the traveller dependency and 0.05% to the remaining path gives a combined 0.1% failure allowance. This is a budget allocation, not evidence that either service meets it. A 99.9% upstream uptime promise alone does not establish success within 600 ms. Unavailable or too-slow uncached context produces a measured failure; cached context is used only within its stated validity. If source commitments cannot support the objective, the service target or dependency design changes before adoption.</p>
+<h2 id="deployment-and-identity">Deployment and identity</h2>
+<p>The <a href="diagrams/aws-overview.svg">main AWS view</a> groups access and scheduling services. The full view below adds the independent age checker, credential storage and their communications. Both describe the same regional design.</p>
+<figure class="diagram landscape"><a href="diagrams/solution-deployment.svg" aria-label="Open full-size diagram"><img src="diagrams/solution-deployment.svg" alt="UML deployment showing hosting, scheduled work, storage, identity, source credentials and monitoring." /></a></figure>
+<p class="source-links"><a href="diagrams/solution-deployment.excalidraw">Edit deployment</a> · <a href="diagrams/solution-deployment.png">PNG</a></p>
+<p>CloudFront is global; S3, the regional REST API, Lambda, DynamoDB, Scheduler, SQS, Bedrock and Secrets Manager are placed in <code>eu-west-2</code>. The REST API choice supports the request validation and WAF integration in this design. Scheduler supplies both refresh jobs and a periodic catalogue-age check, without a separate EventBridge-rule mechanism. The age checker reads active pointers independently of the refresh worker, so stalled refreshes remain visible. CDK versions these resources and monitoring definitions.</p>
+<p><strong>Identity contract:</strong> Cognito is the proposed issuer and can federate an existing organisational identity provider. The browser signs in with the authorisation-code flow, PKCE and a bound state value. The REST API’s Cognito authorizer validates tokens from the configured user pool and requires the recommendation scope. The handler checks the gateway-verified <code>token_use=access</code> and permitted <code>client_id</code> claims before trusting the subject. Signature, issuer and expiry belong to token validation; access-token client identity is not assumed to be an ID-token <code>aud</code> claim.</p>
+<p>The traveller service receives the bearer access token only if it trusts this issuer and the agreed traveller-read scope; it independently authorises its own-record endpoint. Scope consent covers both required APIs. If that service uses another issuer, direct forwarding is not enabled: a delegated token exchange or a service credential with an audited subject mapping must be agreed and added to the adapter contract. Browser-supplied identities are never accepted as that mapping. Cognito is therefore an explicit integration assumption, not a second identity system imposed on an existing service.</p>
+<p>The API role reads profiles and catalogues. The refresh role reads sources, calls the selected model and writes versioned data and job state. The age-check role reads pointers and emits measurements. Any feed credentials are retrieved by the refresh function from Secrets Manager. Monitoring collection has read-only, scoped access. DynamoDB point-in-time recovery and retained tables support recovery within the initial single-region boundary; recovery time/data-loss objectives need product agreement and restore tests.</p>
+<figure class="diagram landscape"><h2 id="measurement-and-monitoring">Measurement and monitoring</h2><a href="diagrams/monitoring-feedback.svg" aria-label="Open full-size diagram"><img src="diagrams/monitoring-feedback.svg" alt="Monitoring evidence and customer feedback lead to reviewed changes and post-release comparison." /></a></figure>
+<p class="source-links"><a href="diagrams/monitoring-feedback.excalidraw">Edit monitoring</a> · <a href="diagrams/monitoring-feedback.png">PNG</a></p>
+<p>Each service indicator has one primary source. There is no hidden reconciliation service and no join required between access logs and application logs.</p>
+<table>
+<thead>
+<tr>
+<th>Indicator</th>
+<th>Source and calculation</th>
+<th>Coverage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Useful availability</td>
+<td>Gateway terminal access records for <code>POST /recommendations</code>. Good = HTTP 200. Bad = 5xx, capacity 429 and other unexpected statuses. Explicit input/access/trip rejections (400/401/403/409) and known abuse blocks are excluded.</td>
+<td>Includes integration failure and handler timeout visible to Gateway. Dependency failure and <code>no-reliable-data</code> use 503, so cannot appear as good empty results. Gateway does not prove browser delivery or answer relevance.</td>
+</tr>
+<tr>
+<td>Response speed</td>
+<td>Same access records. Good = useful HTTP 200 with gateway response latency at most 2,000 ms; all remaining service attempts are bad.</td>
+<td>Measures the API boundary, including authorisation and integration. Browser rendering/network experience is checked separately with the synthetic journey.</td>
+</tr>
+<tr>
+<td>Fresh decision context</td>
+<td>One final structured application outcome per handler invocation, after a valid trip is loaded. Good = readable catalogue with age under 30 minutes; bad = missing, stale or unreadable catalogue.</td>
+<td>Attempts that die without a final application outcome have unknown freshness and are covered as failures by the gateway indicator. They do not become fresh samples.</td>
+</tr>
+</tbody>
+</table>
+<p>The handler owns its final outcome event. Gateway owns terminal access records. CloudWatch metric filters convert each source into good/bad counts, using separate metric names so log forwarding and AWS integration cannot count the same signal twice. Datadog’s AWS integration collects those metrics for the rolling objectives. The age-check function independently publishes catalogue age; platform alarms cover queue backlog, dead letters, throttling, worker errors and model limits. Refresh completion and model spend remain diagnostic measures rather than extra SLOs.</p>
+<p>This first release uses log-derived indicators, not an exactly-once telemetry ledger. CloudWatch metric filters can occasionally deliver duplicates. Opaque extended request IDs and invocation IDs support coverage checks and offline recalculation when duplicates or gaps are detected; affected windows are treated as uncertain until checked. No-traffic periods have no request ratio, and missing telemetry is not success. A CloudWatch Synthetics authenticated journey with a dedicated test account checks sign-in, recommendation response and catalogue warnings independently. Failed probes or a mismatch between source records and counts trigger investigation. A durable deduplicating aggregator is a later option if traffic or reporting requirements justify it.</p>
+<p>CloudWatch retains operational alarms while Datadog provides SLO trends, burn-rate views and release comparisons. Approved metrics use a restricted AWS integration; selected redacted logs use separately configured forwarding. Export delay and gaps stay visible. Neither exporter failure nor Datadog outage blocks traveller requests or catalogue publication.</p>
+<p>Product and engineering review service trends, quality samples, model spend and customer reports. A change records the problem, affected quality goal and expected evidence of improvement. Versioned rules, prompts or capacity settings are replayed against the same baseline, reviewed and rolled out with rollback available. The same SLIs are compared after release. Reviewed, anonymised failures become regression cases. Exhausted error budget shifts priority to reliability; security incidents retain their own urgency. Monitoring and reports inform decisions but do not authorise release.</p>
+<h2 id="security-and-data-handling">Security and data handling</h2>
+<p>The browser, source services, AWS workloads, model and Datadog form separate trust boundaries. Private S3 origin access, HTTPS, least-privilege roles and managed secrets protect them. Tokens stay in browser memory; personalised responses cannot enter shared caches. The permitted web origin, CSP and plain-text rendering reduce script and brand-content risks.</p>
+<p>Model input contains only venue identifiers, names, kinds and keywords. Personal preferences, trip records, credentials, offers and source dietary facts never enter classification prompts. Constrained JSON and concept validation limit authority, but do not prove semantic correctness: adversarial keywords are included in evaluation. The model cannot make a dietary assertion authoritative or override the deterministic time rules.</p>
+<p>Telemetry uses an allowlist: service, environment, airport, outcome, duration, catalogue age/state and configuration version. Tokens, customer identifiers, flight details, preferences, request bodies and raw prompts/replies are excluded before ingestion. Opaque request/job identifiers are restricted diagnostic fields, not high-cardinality metric dimensions. Seeded sensitive strings test filtering, including dependency exceptions. Synthetic-test credentials are held in Secrets Manager and never logged.</p>
+<p>The proposed 30-day diagnostic retention applies to CloudWatch and Datadog separately. The selected Datadog site, external-provider retention, access controls and security-audit retention need agreement. AWS London placement does not establish external-service data residency. Expiry settings are distinguished from physical deletion guarantees.</p>
+<h2 id="validation-and-standards">Validation and standards</h2>
+<table>
+<thead>
+<tr>
+<th>Quality attribute</th>
+<th>Mechanism</th>
+<th>Validation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Performance</td>
+<td>No request-time AI; bounded reads and application deadline.</td>
+<td>Cold/warm requests, cache misses, slow sources and API-boundary timing.</td>
+</tr>
+<tr>
+<td>Reliability and freshness</td>
+<td>Complete versions, fenced publication, redelivery handling and age checks.</td>
+<td>Crash before/after commit, expired leases, duplicate jobs, failed feeds and missing catalogues.</td>
+</tr>
+<tr>
+<td>Scalability</td>
+<td>Separate request/refresh capacity, cached snapshots and coalesced per-airport work.</td>
+<td>Burst traffic, source quotas, queue backlog and catalogue growth against job budgets.</td>
+</tr>
+<tr>
+<td>Security and privacy</td>
+<td>Trusted access context, scoped endpoints and roles, source-only safety facts and redaction.</td>
+<td>Cross-user requests, wrong issuer/client/scope, prompt injection, credential rotation and exported-record inspection.</td>
+</tr>
+<tr>
+<td>Recommendation quality</td>
+<td>Preference ranking, synonym union and deterministic constraints.</td>
+<td>Empty concepts, no preferences, ambiguous keywords, missing dietary fields and human relevance judgements.</td>
+</tr>
+<tr>
+<td>Maintainability</td>
+<td>Pure rules, explicit adapters and versioned contracts/configuration.</td>
+<td>Unit, contract and architecture checks; regression replay before rule or prompt changes.</td>
+</tr>
+<tr>
+<td>Accessibility</td>
+<td>Understandable outcomes, labelled estimates and keyboard-operable UI.</td>
+<td>Keyboard, screen-reader, zoom, focus, status announcements and error recovery.</td>
+</tr>
+<tr>
+<td>Cost and observability</td>
+<td>Reused interpretations, bounded AI work and separate signal sources.</td>
+<td>Tokens/retries per job, cost per changed venue, log/metric coverage, export delay and retention.</td>
+</tr>
+</tbody>
+</table>
+<p>Model evaluation compares synonyms alone with model-plus-synonyms on the same independently labelled holdout. Before sampling, the team agrees a practically useful improvement margin and confidence level; sample size follows expected class frequency and the comparison, rather than a fixed 200-venue minimum. Report precision and recall by category with confidence intervals, inspect regressions and keep ambiguous/adversarial examples separate. If a small set cannot establish the agreed margin, evidence is inconclusive and the synonym baseline remains the initial choice. Regardless of aggregate scores, incorrect dietary authority, forbidden access or unsafe time handling fails the release gate.</p>
+<p>The three riskiest end-to-end checks are: a current visit across overnight opening/offer boundaries; two refresh deliveries plus a crash around publication; and an authenticated attempt to read another traveller’s context. They are supplemented by malformed model replies, partial feed pages, provider throttling, browser outcomes and restore exercises. All checks validate the design; none is described as an already achieved production result.</p>
+<table>
+<thead>
+<tr>
+<th>Guidance</th>
+<th>Design application</th>
+<th>Verification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://docs.aws.amazon.com/wellarchitected/latest/framework/the-pillars-of-the-framework.html">AWS Well-Architected</a></td>
+<td>Separate capacity, bounded dependencies, least privilege, complete snapshots and measurable improvement.</td>
+<td>Load, failure, cost and restore exercises; agree recovery objectives.</td>
+</tr>
+<tr>
+<td><a href="https://asvs.owasp.org/">OWASP ASVS 5.0.0</a> and <a href="https://genai.owasp.org/llmrisk/llm01-prompt-injection/">prompt-injection guidance</a></td>
+<td>Scoped identities, safe rendering, data minimisation and limited model authority.</td>
+<td>Select applicable controls; test access boundaries, sign-in and untrusted content.</td>
+</tr>
+<tr>
+<td><a href="https://www.w3.org/TR/WCAG22/">WCAG 2.2</a></td>
+<td>Proposed AA baseline for the interface.</td>
+<td>Automated and manual checks for applicable criteria, including keyboard access, focus and status messages.</td>
+</tr>
+<tr>
+<td><a href="https://sre.google/workbook/implementing-slos/">Google SRE</a></td>
+<td>User-facing good/bad indicators and review of error-budget use.</td>
+<td>Verify coverage, exclusions, source reliability and no-data handling.</td>
+</tr>
+<tr>
+<td><a href="https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-vs-rest.html">AWS API choices</a> and <a href="https://docs.aws.amazon.com/cognito/latest/developerguide/amazon-cognito-user-pools-using-tokens-verifying-a-jwt.html">Cognito verification</a></td>
+<td>REST API for WAF/validation; explicit issuer, app-client and access-scope contract.</td>
+<td>Integration tests with the actual issuer and traveller service.</td>
+</tr>
+<tr>
+<td><a href="https://docs.aws.amazon.com/lambda/latest/dg/services-sqs-configure.html">Lambda/SQS configuration</a></td>
+<td>Visibility at least six times function timeout, bounded ownership and redelivery-safe publication.</td>
+<td>Slow invocation, throttle, expired owner and redrive tests.</td>
+</tr>
+<tr>
+<td><a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/MonitoringLogData.html">CloudWatch metric filters</a> and <a href="https://docs.datadoghq.com/service_level_objectives/metric.md">Datadog SLOs</a></td>
+<td>Explicit source-to-count ownership; metric-based good/bad objectives and visible collection limitations.</td>
+<td>Duplicate/gap detection, latency thresholds and metric-query checks.</td>
+</tr>
+</tbody>
+</table>
+<p>These references guide a design assessment; they do not establish certification or completed conformance. Source contracts, upstream commitments, recovery objectives, applicable controls, external data handling and monetary AI budget remain decisions to agree.</p>
+<p><a href="solution-design.html">Return to the main proposal</a></p>
+</main></body></html>

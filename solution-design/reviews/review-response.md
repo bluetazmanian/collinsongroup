@@ -186,3 +186,18 @@ Updated the deployment legend, accessible image description and entry-point docu
 Moved the browser and API Gateway down together by 110 source pixels, about 12.5 mm in the PDF. They remain horizontally aligned, with the browser outside the regional boundary and the gateway inside it. Repositioned the user-device label and the website-files and API labels. Adjusted the browser's CloudFront and Cognito paths, the gateway's authorizer dependency and its connection to the recommendation Lambda. Other resource positions, fonts and proposal wording are unchanged.
 
 Regenerated the AWS Excalidraw, SVG and PNG and the document exports. The updated first PDF page was visually inspected. The PDF remains three pages; diagram clipping, label/connector intersections, box-edge overlap and responsive-browser checks passed. The backend and frontend views, application code, brief, independent reviews and earlier supporting documents were not changed.
+
+## Final review wording corrections
+
+The [final independent review](final-design-review.md) scored the proposal 88/100 and identified four small text corrections. Those corrections were approved. The review and its score remain unchanged; this records the resulting edits.
+
+Before editing, the complete design folder was backed up at `backups/20261112-102640-before-final-review/solution-design/` in the project root. The backup includes the previous Markdown, HTML and PDF, all editable diagrams, supporting material and reviews. All 66 copied files were checked against their originals; the backup's parent folder contains `SHA256.json` and restore instructions. Dependency folders and Python caches were excluded.
+
+| Finding | Correction |
+| --- | --- |
+| N1: Tentative opening | Described prepared data as part of the chosen design, explained when the model interprets descriptions, and retained the limits of venue information and estimated visit times. |
+| N2: Technology trade-offs | Attributed regional failure to the backend; identified recommendations as the reader of complete venue data; explained the delay before venue changes appear; distinguished CloudWatch collection from Datadog target reporting and its additional cost/external provider. The existing bold trade-off format was retained. |
+| N3: Gate advice and sales source | The flight-time rule now explains that insufficient time leads to advice to go to the gate. The sales row identifies the assumed external feed without adding commentary about the exercise brief. |
+| N4: Two trip readers | Added one short explanation below the frontend view: the browser reads the trip for display, while the backend obtains it separately to calculate recommendations. This does not assert a fresh network call for every request. |
+
+Regenerated the HTML and PDF. The accepted diagrams, fonts, page structure and previously removed detailed sections were preserved. No IoT or edge-computing scope was added. The PDF remains three upright A4 landscape pages, with text inside page bounds. The rendered pages were visually inspected; the HTML passed image-loading and overflow checks at 1440, 900 and 390 pixels. All six infrastructure entries retain bold trade-offs. Application code, diagram assets, the original brief, independent reviews, supporting documents and the verified backup are unchanged.

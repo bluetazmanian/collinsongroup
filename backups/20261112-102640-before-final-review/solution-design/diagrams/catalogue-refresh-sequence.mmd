@@ -1,0 +1,45 @@
+---
+config:
+  themeCSS: ".messageText, .loopText { paint-order: stroke fill; stroke: white; stroke-width: 5px; stroke-linejoin: round; }"
+---
+sequenceDiagram
+    autonumber
+    participant Queue as Scheduled SQS job
+    participant Worker as Refresh Lambda
+    participant Data as DynamoDB catalogue
+    participant Feeds as Venue and offer feeds
+    participant AI as Bedrock interpreter
+
+    Queue->>Worker: Airport, schedule slot and stable job ID
+    Worker->>Data: Check job state and acquire airport lease
+    alt Completed, superseded or another worker holds the lease
+        Data-->>Worker: No new work needed
+        Worker-->>Queue: Acknowledge duplicate or coalesced job
+    else Lease acquired
+        Data-->>Worker: Lease owner and fencing token
+        Worker->>Feeds: Fetch complete venue pages and optional offers
+        alt Required venue feed fails
+            Feeds-->>Worker: Failure
+            Worker->>Data: Release lease without changing active catalogue
+            Worker-->>Queue: Fail delivery for SQS redelivery
+        else Venue data available
+            Feeds-->>Worker: Source facts and available offers
+            Worker->>Data: Read previous keyword interpretations
+            Data-->>Worker: Concepts keyed by source and interpretation version
+            loop Changed keywords within the total AI time budget
+                Worker->>AI: Venue IDs, names, kinds and keywords
+                AI-->>Worker: Concepts for validation, or failure
+            end
+            Note over Worker,AI: Synonyms are always included. On AI failure or budget expiry, use keywords.
+            Worker->>Data: Write complete snapshot under a new version
+            Worker->>Data: Transaction checks lease and advances pointer, records completion
+            alt Publication committed
+                Data-->>Worker: Active version and completed job recorded
+                Worker-->>Queue: Acknowledge completed delivery
+            else Ownership changed
+                Data-->>Worker: Publication refused
+                Worker-->>Queue: Retry unless a newer result supersedes this job
+            end
+        end
+    end
+    Note over Queue,Data: Redelivery can repeat work. Publication is fenced. Expired owners cannot publish.
