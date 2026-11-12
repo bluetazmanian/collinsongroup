@@ -1,0 +1,40 @@
+---
+config:
+  themeCSS: ".messageText, .loopText { paint-order: stroke fill; stroke: white; stroke-width: 5px; stroke-linejoin: round; }"
+---
+sequenceDiagram
+    autonumber
+    participant Web as Traveller website
+    participant Gate as API Gateway REST API
+    participant API as Recommendation Lambda
+    participant Trip as Traveller service
+    participant Data as DynamoDB catalogue
+    participant Rules as Decision rules
+
+    Web->>Gate: Airport and result limit, access token
+    break Access or request is rejected
+        Gate-->>Web: Sign-in or input error
+    end
+    Gate->>API: Validated input and trusted access context
+    API->>Data: Read airport profile first
+    Data-->>API: Time zone and visit allowances
+    API->>Trip: Read this traveller using the agreed token contract
+    alt Traveller service unavailable
+        Trip-->>API: Error or 600 ms deadline
+        API-->>Gate: 503, retry guidance
+        Gate-->>Web: Explain temporary failure
+    else Context available
+        Trip-->>API: Selected preferences and flight time
+        break Trip is invalid for this airport
+            API-->>Gate: 409, invalid trip
+            Gate-->>Web: Explain airport or flight mismatch
+        end
+        API->>Data: Load active pointer and complete snapshot
+        Data-->>API: Venue facts, concepts and source-fetch time
+        API->>Rules: Evaluate the current visit
+        Rules-->>API: Results, head-to-gate, no-suitable or no-reliable-data
+        API-->>Gate: 200 for useful decisions, 503 for no-reliable-data
+        Gate-->>Web: Results or explanation, private and no-store
+    end
+    Note over API,Data: The handler records one final application outcome, including catalogue age.
+    Note over Web,Gate: Gateway records final status and total API latency independently.
